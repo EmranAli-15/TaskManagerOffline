@@ -1,6 +1,9 @@
 import Container from '@/components/Container';
+import AntDesign from '@expo/vector-icons/AntDesign';
+import Entypo from '@expo/vector-icons/Entypo';
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import React, { useCallback, useState } from 'react';
-import { Button, FlatList, RefreshControl, StyleSheet, Text, View } from 'react-native';
+import { FlatList, RefreshControl, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 type TNote = {
     id: number,
@@ -37,22 +40,34 @@ export default function Index() {
 
     return (
         <Container>
-            <Button
-                title={numColumns === 1 ? "Grid View" : "List View"}
-                onPress={() => setNumColumns(numColumns === 1 ? 2 : 1)}
-            />
+
+            <View style={styles.viewButton}>
+                <TouchableOpacity onPress={() => setNumColumns(numColumns === 1 ? 2 : 1)}>
+                    <View>
+                        {
+                            numColumns === 1 ? <MaterialIcons name="checklist" size={35} color="#0077b6" />
+                                :
+                                <Entypo name="grid" size={35} color="#0077b6" />
+                        }
+                    </View>
+                </TouchableOpacity>
+            </View>
+
+            <View style={styles.addNote}>
+                <AntDesign name="file-add" size={24} color="white" />
+            </View>
 
             <View>
                 <FlatList
                     data={data}
                     numColumns={numColumns}
-                    key={numColumns} // important
+                    key={numColumns}
                     keyExtractor={(item: TNote, index) => index.toString()}
                     renderItem={({ item }) => (
-                        <View style={styles.box}>
+                        <View style={[styles.box, { width: numColumns == 2 ? "50%" : "auto", marginHorizontal: 3, flex: 1 }]}>
 
                             <View style={{ height: 10, backgroundColor: item.head }}></View>
-                            <View style={{ height: 100, backgroundColor: item.body }}>
+                            <View style={{ height: 90, backgroundColor: item.body }}>
                                 <Text style={styles.item}>
                                     Bolna amay tui bolna.
                                 </Text>
@@ -63,9 +78,10 @@ export default function Index() {
                     refreshControl={
                         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
                     }
-                    contentContainerStyle={{ paddingBottom: 100 }}
+                    contentContainerStyle={{ paddingBottom: 120 }}
                 />
             </View>
+
         </Container>
     )
 }
@@ -80,6 +96,19 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         overflow: "hidden",
         flex: 1,
-        margin: 5,
+        marginTop: 5,
+    },
+    addNote: {
+        position: "absolute",
+        bottom: 80,
+        right: 10,
+        backgroundColor: "#0077b6",
+        padding: 20,
+        borderRadius: "50%",
+        zIndex: 10,
+    },
+    viewButton: {
+        flexDirection: "row",
+        justifyContent: "flex-end"
     }
 });
