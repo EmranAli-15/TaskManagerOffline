@@ -1,9 +1,11 @@
 import Container from '@/components/Container';
+import { ThemedText } from '@/components/themed-text';
+import { ThemedView } from '@/components/themed-view';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import Entypo from '@expo/vector-icons/Entypo';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import React, { useCallback, useState } from 'react';
-import { FlatList, RefreshControl, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { FlatList, RefreshControl, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 type TNote = {
     id: number,
@@ -40,14 +42,44 @@ export default function Index() {
 
     return (
         <Container>
+            <ThemedText style={{ fontSize: 30, fontWeight: 700 }}>
+                HelixNotes
+            </ThemedText>
+
+            <View>
+                <ScrollView horizontal
+                    showsHorizontalScrollIndicator={false}
+                    contentContainerStyle={{ gap: 8 }}
+                    style={{ marginTop: 10 }}
+                >
+                    <ThemedView style={styles.navList}>
+                        <ThemedText>All Notes</ThemedText>
+                    </ThemedView>
+                    <ThemedView style={styles.navList}>
+                        <ThemedText>Today</ThemedText>
+                    </ThemedView>
+                    <ThemedView style={styles.navList}>
+                        <ThemedText>Exams</ThemedText>
+                    </ThemedView>
+                    <ThemedView style={styles.navList}>
+                        <ThemedText>Tasks</ThemedText>
+                    </ThemedView>
+                    <ThemedView style={styles.navList}>
+                        <ThemedText>Projects</ThemedText>
+                    </ThemedView>
+                    <ThemedView style={styles.navList}>
+                        <ThemedText>Ideas</ThemedText>
+                    </ThemedView>
+                </ScrollView>
+            </View>
 
             <View style={styles.viewButton}>
                 <TouchableOpacity onPress={() => setNumColumns(numColumns === 1 ? 2 : 1)}>
                     <View>
                         {
-                            numColumns === 1 ? <MaterialIcons name="checklist" size={35} color="#0077b6" />
+                            numColumns === 1 ? <MaterialIcons name="checklist" size={35} color="orange" />
                                 :
-                                <Entypo name="grid" size={35} color="#0077b6" />
+                                <Entypo name="grid" size={35} color="orange" />
                         }
                     </View>
                 </TouchableOpacity>
@@ -100,7 +132,7 @@ const styles = StyleSheet.create({
     },
     addNote: {
         position: "absolute",
-        bottom: 80,
+        bottom: 40,
         right: 10,
         backgroundColor: "#0077b6",
         padding: 20,
@@ -110,5 +142,9 @@ const styles = StyleSheet.create({
     viewButton: {
         flexDirection: "row",
         justifyContent: "flex-end"
+    },
+    navList:{
+        paddingHorizontal: 8,
+        borderRadius: 5
     }
 });
