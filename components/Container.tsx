@@ -1,0 +1,15 @@
+import React from 'react'
+import { View } from 'react-native'
+import { SafeAreaView } from 'react-native-safe-area-context'
+
+export default function Container({ children }: { children: any }) {
+    return (
+        <SafeAreaView>
+            <View style={{ margin: 10 }}>
+                {
+                    children
+                }
+            </View>
+        </SafeAreaView>
+    )
+}
