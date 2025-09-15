@@ -13,13 +13,13 @@ import {
   View
 } from 'react-native';
 
-const noteColor = [
-  { id: 1, head: "#77BEF0", body: "#CBDCEB" },
-  { id: 2, head: "#ffdc75", body: "#fff2cc" },
-  { id: 3, head: "#eca3a3", body: "#f6d6d6" },
-  { id: 4, head: "#a5d732", body: "#ddf0b2" },
-  { id: 5, head: "#d94c9f", body: "#f4cce3" },
-  { id: 6, head: "#875ab2", body: "#d2c1e2" }
+const noteColorPallate = [
+  { id: 0, head: "#77BEF0", body: "#CBDCEB" },
+  { id: 1, head: "#ffdc75", body: "#fff2cc" },
+  { id: 2, head: "#eca3a3", body: "#f6d6d6" },
+  { id: 3, head: "#a5d732", body: "#ddf0b2" },
+  { id: 4, head: "#d94c9f", body: "#f4cce3" },
+  { id: 5, head: "#875ab2", body: "#d2c1e2" }
 ]
 
 export default function AddNote() {
@@ -34,7 +34,8 @@ export default function AddNote() {
 
   const [showOps, setShowOps] = useState(false);
   const [title, setTitle] = useState("");
-  const [details, setDetails] = useState(t);
+  const [details, setDetails] = useState("");
+  const [noteColor, setNoteColor] = useState(Math.floor(Math.random() * 6));
 
 
   const titleRef = useRef<TextInput | any>(null);
@@ -53,70 +54,70 @@ export default function AddNote() {
 
   return (
     <Container>
-      <ScrollView>
-        <View style={{ flex: 1, height: "100%" }}>
-
-          <TextInput
-            multiline={true}
-            style={[styles.title, { color: color }]}
-            onChangeText={(text) => setTitle(text)}
-            placeholderTextColor="gray"
-            placeholder='Title'
-            value={title}
-            ref={(ref) => {
-              titleRef && (titleRef.current = ref as any);
-            }}
-          />
-
-
-          <View style={{ marginTop: 20, marginBottom: 150 }}>
+      <View style={{ flex: 1, height: "100%" }}>
+        <ScrollView>
+          <View>
             <TextInput
-              textAlignVertical='top'
               multiline={true}
-              style={[styles.details, { color: color }]}
-              onChangeText={(text) => setDetails(text)}
+              style={[styles.title, { color: noteColorPallate[noteColor].head }]}
+              onChangeText={(text) => setTitle(text)}
               placeholderTextColor="gray"
-              placeholder='Details ...'
-              value={details}
+              placeholder='Title'
+              value={title}
               ref={(ref) => {
-                detailsRef && (detailsRef.current = ref as any);
+                titleRef && (titleRef.current = ref as any);
               }}
             />
-          </View>
 
 
-
-          <View style={{ position: "absolute", bottom: 10 }}>
-            <View style={{ zIndex: 100, backgroundColor: "gray", borderRadius: 20, flex: 1 }}>
-              <TouchableOpacity onPress={() => setShowOps(!showOps)}>
-                <View style={{ marginVertical: 10, alignSelf: "center" }}>
-                  {!showOps && <MaterialIcons name="keyboard-double-arrow-up" size={40} color={color} />}
-                  {showOps && <MaterialIcons name="keyboard-double-arrow-down" size={40} color={color} />}
-                </View>
-              </TouchableOpacity>
-
-
-              <>
-                {
-                  showOps &&
-                  <View style={{ marginTop: 10, marginBottom: 20 }}>
-                    <FlatList
-                      horizontal
-                      data={noteColor}
-                      keyExtractor={(item: any, index) => index.toString()}
-                      renderItem={({ item }) => (
-                        <View style={[styles.colorStyle, { backgroundColor: item.head, marginHorizontal: 10, flex: 1 }]}></View>
-                      )}
-                      contentContainerStyle={{ marginBottom: 10 }}
-                    ></FlatList>
-                  </View>
-                }
-              </>
+            <View style={{ marginTop: 20, marginBottom: 100 }}>
+              <TextInput
+                textAlignVertical='top'
+                multiline={true}
+                style={[styles.details, { color: color }]}
+                onChangeText={(text) => setDetails(text)}
+                placeholderTextColor="gray"
+                placeholder='Details ...'
+                value={details}
+                ref={(ref) => {
+                  detailsRef && (detailsRef.current = ref as any);
+                }}
+              />
             </View>
           </View>
+        </ScrollView>
 
+        <View style={{ position: "absolute", bottom: 10 }}>
+          <View style={{ zIndex: 100, backgroundColor: "gray", borderRadius: 20, flex: 1 }}>
+            <TouchableOpacity onPress={() => setShowOps(!showOps)}>
+              <View style={{ marginVertical: 10, alignSelf: "center" }}>
+                {!showOps && <MaterialIcons name="keyboard-double-arrow-up" size={40} color="white" />}
+                {showOps && <MaterialIcons name="keyboard-double-arrow-down" size={40} color="white" />}
+              </View>
+            </TouchableOpacity>
+
+
+            <>
+              {
+                showOps &&
+                <View style={{ marginTop: 10, marginBottom: 20 }}>
+                  <FlatList
+                    horizontal
+                    data={noteColorPallate}
+                    keyExtractor={(item: any, index) => index.toString()}
+                    renderItem={({ item }) => (
+                      <TouchableOpacity onPress={() => setNoteColor(item.id)}>
+                        <View style={[styles.colorStyle, { backgroundColor: item.head, marginHorizontal: 10, flex: 1 }]}></View>
+                      </TouchableOpacity>
+                    )}
+                    contentContainerStyle={{ marginBottom: 10 }}
+                  ></FlatList>
+                </View>
+              }
+            </>
+          </View>
         </View>
-      </ScrollView>
+      </View>
     </Container >
   )
 }
@@ -125,18 +126,15 @@ const styles = StyleSheet.create({
   title: {
     borderColor: "gray",
     borderBottomWidth: 2,
-    fontSize: 22,
+    fontSize: 25,
     borderBottomLeftRadius: 8,
     borderBottomRightRadius: 8
   },
   details: {
-    borderColor: "gray",
-    borderBottomWidth: 2,
     fontSize: 18,
     borderBottomLeftRadius: 8,
     borderBottomRightRadius: 8,
-    minHeight: 500,
-    textAlign: "justify",
+    minHeight: 200,
   },
   navList: {
     paddingHorizontal: 8,
