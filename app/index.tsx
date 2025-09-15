@@ -4,6 +4,7 @@ import { ThemedView } from '@/components/themed-view';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import Entypo from '@expo/vector-icons/Entypo';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import { Link } from 'expo-router';
 import React, { useCallback, useState } from 'react';
 import { FlatList, RefreshControl, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
@@ -13,7 +14,7 @@ type TNote = {
     body: string;
 }
 
-export default function Index() {
+export default function HomeScreen() {
     const [data, setData] = useState([
         { id: 1, head: "#77BEF0", body: "#CBDCEB" },
         { id: 2, head: "#ffdc75", body: "#fff2cc" },
@@ -53,22 +54,22 @@ export default function Index() {
                     style={{ marginTop: 10 }}
                 >
                     <ThemedView style={styles.navList}>
-                        <ThemedText>All Notes</ThemedText>
+                        <ThemedText style={styles.navListText}>All Notes</ThemedText>
                     </ThemedView>
                     <ThemedView style={styles.navList}>
-                        <ThemedText>Today</ThemedText>
+                        <ThemedText style={styles.navListText}>Today</ThemedText>
                     </ThemedView>
                     <ThemedView style={styles.navList}>
-                        <ThemedText>Exams</ThemedText>
+                        <ThemedText style={styles.navListText}>Exams</ThemedText>
                     </ThemedView>
                     <ThemedView style={styles.navList}>
-                        <ThemedText>Tasks</ThemedText>
+                        <ThemedText style={styles.navListText}>Tasks</ThemedText>
                     </ThemedView>
                     <ThemedView style={styles.navList}>
-                        <ThemedText>Projects</ThemedText>
+                        <ThemedText style={styles.navListText}>Projects</ThemedText>
                     </ThemedView>
                     <ThemedView style={styles.navList}>
-                        <ThemedText>Ideas</ThemedText>
+                        <ThemedText style={styles.navListText}>Ideas</ThemedText>
                     </ThemedView>
                 </ScrollView>
             </View>
@@ -86,7 +87,9 @@ export default function Index() {
             </View>
 
             <View style={styles.addNote}>
-                <AntDesign name="file-add" size={24} color="white" />
+                <Link href="/AddNote">
+                    <AntDesign name="file-add" size={24} color="white" />
+                </Link>
             </View>
 
             <View>
@@ -143,8 +146,11 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "flex-end"
     },
-    navList:{
+    navList: {
         paddingHorizontal: 8,
         borderRadius: 5
+    },
+    navListText: {
+        fontSize: 18
     }
 });
