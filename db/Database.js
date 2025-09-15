@@ -1,0 +1,64 @@
+import * as SQLite from "expo-sqlite";
+
+let db = null;
+const initDB = async () => {
+    if (!db) db = await SQLite.openDatabaseAsync("taskManager");
+    return db;
+};
+
+
+
+// FOR COLOR TABLE
+export const createColorTable = async () => {
+    const db = await initDB();
+    await db.execAsync(`CREATE TABLE IF NOT EXISTS color (id INTEGER PRIMARY KEY AUTOINCREMENT, head VARCHAR(15), body VARCHAR(15));`);
+};
+
+export const insertDataIntoColorTable = async () => {
+    // const db = await initDB();
+    // const data = await db.runAsync(
+    //     `INSERT INTO color (head, body)
+    //     VALUES
+    //     ('#77BEF0', '#CBDCEB'),
+    //     ('#ffdc75', '#fff2cc'),
+    //     ('#eca3a3', '#f6d6d6'),
+    //     ('#a5d732', '#ddf0b2'),
+    //     ('#d94c9f', '#f4cce3'),
+    //     ('#875ab2', '#d2c1e2');
+    //     `
+    // );
+};
+
+export const getDataFromColorTable = async () => {
+    const db = await initDB();
+    const data = await db.getAllAsync(`SELECT * FROM color;`);
+    return data;
+};
+
+
+
+// FOR CATEGORY TABLE
+export const createCategoryTable = async () => {
+    const db = await initDB();
+    await db.execAsync(`CREATE TABLE IF NOT EXISTS category (id INTEGER PRIMARY KEY AUTOINCREMENT, name VARCHAR(15));`);
+};
+
+export const insertDataIntoCategoryTable = async () => {
+    // const db = await initDB();
+    // await db.runAsync(
+    //     `INSERT INTO category (name)
+    //     VALUES
+    //     ('today'),
+    //     ('exams'),
+    //     ('tasks'),
+    //     ('projects'),
+    //     ('ideas');
+    //     `
+    // );
+};
+
+export const getDataFromCategoryTable = async () => {
+    const db = await initDB();
+    const data = await db.getAllAsync(`SELECT * FROM category;`);
+    return data;
+};

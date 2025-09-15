@@ -1,3 +1,4 @@
+import { createCategoryTable, createColorTable, getDataFromCategoryTable, getDataFromColorTable } from "@/db/Database";
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 
 import Container from '@/components/Container';
@@ -13,14 +14,7 @@ import {
   View
 } from 'react-native';
 
-const noteColorPallate = [
-  { id: 0, head: "#77BEF0", body: "#CBDCEB" },
-  { id: 1, head: "#ffdc75", body: "#fff2cc" },
-  { id: 2, head: "#eca3a3", body: "#f6d6d6" },
-  { id: 3, head: "#a5d732", body: "#ddf0b2" },
-  { id: 4, head: "#d94c9f", body: "#f4cce3" },
-  { id: 5, head: "#875ab2", body: "#d2c1e2" }
-]
+type TNoteColorPallate = { id: number, head: string, body: string };
 
 export default function AddNote() {
   let color = "white";
@@ -29,12 +23,12 @@ export default function AddNote() {
   else color = "black";
 
 
-  const t = "Lorem ipsum dolor sit amet consectetur adipisicing elit. Odit aperiam reiciendis commodi eligendi, natus minima pariatur quibusdam unde incidunt, nam placeat eum harum quaerat quos doloremque mollitia exercitationem delectus beatae repellendus dolorum ipsam! Inventore dolor placeat quam itaque est nam rerum odit accusamus mollitia. Dolores beatae qui eveniet nostrum quia et id numquam. Nobis delectus quae pariatur odit rerum enim voluptate dicta modi, voluptatum illo voluptates vitae fuga ab praesentium corrupti sequi id officia, molestias sint nulla autem cumque cupiditate eveniet quaerat? Itaque pariatur odit ab iste adipisci dolore vel officia aspernatur laborum. Amet beatae obcaecati nihil neque natus quisquam, saepe magnam fugiat vitae? Eveniet quasi quos consequatur vel porro? Fugit asperiores cumque, voluptate maxime recusandae doloremque! Numquam exercitationem quis, modi unde, autem explicabo itaque accusantium cupiditate ratione doloribus, dolore blanditiis! Quo totam repellendus minus magni veritatis alias, reprehenderit illum? Molestiae atque iste, ipsa quasi at facere labore accusantium rerum unde est voluptatem id quis vero laborum dolor delectus pariatur repellat minus eos nesciunt iusto aliquid perferendis voluptas ducimus? Enim molestiae, explicabo cum perspiciatis pariatur quisquam rerum in consectetur eos provident vero illum officia blanditiis commodi, impedit doloribus tempore animi atque tempora mollitia at ea optio recusandae? Dolorem, consectetur illum.Lorem ipsum dolor sit amet consectetur adipisicing elit. Odit aperiam reiciendis commodi eligendi, natus minima pariatur quibusdam unde incidunt, nam placeat eum harum quaerat quos doloremque mollitia exercitationem delectus beatae repellendus dolorum ipsam! Inventore dolor placeat quam itaque est nam rerum odit accusamus mollitia. Dolores beatae qui eveniet nostrum quia et id numquam. Nobis delectus quae pariatur odit rerum enim voluptate dicta modi, voluptatum illo voluptates vitae fuga ab praesentium corrupti sequi id officia, molestias sint nulla autem cumque cupiditate eveniet quaerat? Itaque pariatur odit ab iste adipisci dolore vel officia aspernatur laborum. Amet beatae obcaecati nihil neque natus quisquam, saepe magnam fugiat vitae? Eveniet quasi quos consequatur vel porro? Fugit asperiores cumque, voluptate maxime recusandae doloremque! Numquam exercitationem quis, modi unde, autem explicabo itaque accusantium cupiditate ratione doloribus, dolore blanditiis! Quo totam repellendus minus magni veritatis alias, reprehenderit illum? Molestiae atque iste, ipsa quasi at facere labore accusantium rerum unde est voluptatem id quis vero laborum dolor delectus pariatur repellat minus eos nesciunt iusto aliquid perferendis voluptas ducimus? Enim molestiae, explicabo cum perspiciatis pariatur quisquam rerum in consectetur eos provident vero illum officia blanditiis commodi, impedit doloribus tempore animi atque tempora mollitia at ea optio recusandae? Dolorem, consectetur illum."
-
-
   const [showOps, setShowOps] = useState(false);
   const [title, setTitle] = useState("");
   const [details, setDetails] = useState("");
+
+  const [noteColorPallate, setNoteColorPallate] = useState<TNoteColorPallate[]>([]);
+
   const [noteColor, setNoteColor] = useState(Math.floor(Math.random() * 6));
 
 
@@ -52,6 +46,25 @@ export default function AddNote() {
   }, []);
 
 
+
+  useEffect(() => {
+    const run = async () => {
+      await createColorTable();
+      await createCategoryTable();
+
+      // await insertDataIntoCategoryTable();
+
+      const colors = await getDataFromColorTable();
+      setNoteColorPallate(colors);
+
+      const categories = await getDataFromCategoryTable();
+      console.log(categories);
+    }
+
+    run();
+  },[])
+
+
   return (
     <Container>
       <View style={{ flex: 1, height: "100%" }}>
@@ -59,9 +72,9 @@ export default function AddNote() {
           <View>
             <TextInput
               multiline={true}
-              style={[styles.title, { color: noteColorPallate[noteColor].head }]}
+              style={[styles.title, { color: noteColorPallate[noteColor]?.head }]}
               onChangeText={(text) => setTitle(text)}
-              placeholderTextColor="gray"
+              placeholderTextColor={noteColorPallate[noteColor]?.body}
               placeholder='Title'
               value={title}
               ref={(ref) => {
@@ -106,7 +119,7 @@ export default function AddNote() {
                     data={noteColorPallate}
                     keyExtractor={(item: any, index) => index.toString()}
                     renderItem={({ item }) => (
-                      <TouchableOpacity onPress={() => setNoteColor(item.id)}>
+                      <TouchableOpacity onPress={() => setNoteColor(item.id-1)}>
                         <View style={[styles.colorStyle, { backgroundColor: item.head, marginHorizontal: 10, flex: 1 }]}></View>
                       </TouchableOpacity>
                     )}
