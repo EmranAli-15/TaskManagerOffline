@@ -1,7 +1,8 @@
-import { createCategoryTable, createColorTable, getDataFromCategoryTable, getDataFromColorTable } from "@/db/Database";
+import { createCategoryTable, createColorTable, getDataFromCategoryTable, getDataFromColorTable, insertDataIntoCategoryTable, insertDataIntoColorTable } from "@/db/Database";
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 
 import Container from '@/components/Container';
+import { ThemedText } from "@/components/themed-text";
 import React, { useEffect, useRef, useState } from 'react';
 import {
   FlatList,
@@ -24,8 +25,11 @@ export default function AddNote() {
 
 
   const [showOps, setShowOps] = useState(false);
+
   const [title, setTitle] = useState("");
   const [details, setDetails] = useState("");
+  const [categoryId, setCategoryId] = useState(1);
+  const [categories, setCategories] = useState<string[]>([]);
 
   const [noteColorPallate, setNoteColorPallate] = useState<TNoteColorPallate[]>([]);
 
@@ -52,17 +56,18 @@ export default function AddNote() {
       await createColorTable();
       await createCategoryTable();
 
-      // await insertDataIntoCategoryTable();
+      await insertDataIntoColorTable();
+      await insertDataIntoCategoryTable();
 
       const colors = await getDataFromColorTable();
       setNoteColorPallate(colors);
 
       const categories = await getDataFromCategoryTable();
-      console.log(categories);
+      setCategories(categories);
     }
 
     run();
-  },[])
+  }, [])
 
 
   return (
@@ -119,8 +124,22 @@ export default function AddNote() {
                     data={noteColorPallate}
                     keyExtractor={(item: any, index) => index.toString()}
                     renderItem={({ item }) => (
-                      <TouchableOpacity onPress={() => setNoteColor(item.id-1)}>
+                      <TouchableOpacity onPress={() => setNoteColor(item.id - 1)}>
                         <View style={[styles.colorStyle, { backgroundColor: item.head, marginHorizontal: 10, flex: 1 }]}></View>
+                      </TouchableOpacity>
+                    )}
+                    contentContainerStyle={{ marginBottom: 10 }}
+                  ></FlatList>
+                  <FlatList
+                    style={{ marginTop: 10 }}
+                    horizontal
+                    data={categories}
+                    keyExtractor={(item: any, index) => index.toString()}
+                    renderItem={({ item }) => (
+                      <TouchableOpacity onPress={() => setCategoryId(item.id)}>
+                        <View style={{ flex: 1, marginHorizontal: 8, width: "100%" }}>
+                          <ThemedText style={{ fontSize: 20, fontWeight: 600, textTransform: "capitalize", color: item?.id == categoryId ? "red" : "white" }}>{item?.name}</ThemedText>
+                        </View>
                       </TouchableOpacity>
                     )}
                     contentContainerStyle={{ marginBottom: 10 }}
