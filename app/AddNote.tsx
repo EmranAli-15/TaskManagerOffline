@@ -1,4 +1,5 @@
-import { createCategoryTable, createColorTable, getDataFromCategoryTable, getDataFromColorTable, insertDataIntoCategoryTable, insertDataIntoColorTable } from "@/db/Database";
+import { getDataFromCategoryTable, getDataFromColorTable, insertDataIntoNoteTable } from "@/db/Database";
+import Ionicons from '@expo/vector-icons/Ionicons';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 
 import Container from '@/components/Container';
@@ -19,9 +20,16 @@ type TNoteColorPallate = { id: number, head: string, body: string };
 
 export default function AddNote() {
   let color = "white";
+  let colorBg = "#fff"
   const colorScheme = useColorScheme();
-  if (colorScheme == "dark") color = "white";
-  else color = "black";
+  if (colorScheme == "dark") {
+    color = "white";
+    colorBg = "#151718"
+  }
+  else {
+    color = "black";
+    colorBg = "#fff";
+  }
 
 
   const [showOps, setShowOps] = useState(false);
@@ -29,11 +37,34 @@ export default function AddNote() {
   const [title, setTitle] = useState("");
   const [details, setDetails] = useState("");
   const [categoryId, setCategoryId] = useState(1);
-  const [categories, setCategories] = useState<string[]>([]);
+  const [noteColor, setNoteColor] = useState(Math.floor(Math.random() * 6));
 
+
+  const [categories, setCategories] = useState<string[]>([]);
   const [noteColorPallate, setNoteColorPallate] = useState<TNoteColorPallate[]>([]);
 
-  const [noteColor, setNoteColor] = useState(Math.floor(Math.random() * 6));
+
+
+  const handleSaveNote = async () => {
+    const data = {
+      title: title,
+      details: details,
+      category: categoryId,
+      color: noteColor + 1
+    }
+    if (details || title) {
+      await insertDataIntoNoteTable(data);
+      setTitle("");
+      setDetails("");
+    }
+  }
+
+
+
+
+
+
+
 
 
   const titleRef = useRef<TextInput | any>(null);
@@ -49,21 +80,12 @@ export default function AddNote() {
     };
   }, []);
 
-
-
   useEffect(() => {
     const run = async () => {
-      await createColorTable();
-      await createCategoryTable();
-
-      await insertDataIntoColorTable();
-      await insertDataIntoCategoryTable();
-
       const colors = await getDataFromColorTable();
-      setNoteColorPallate(colors);
-
       const categories = await getDataFromCategoryTable();
       setCategories(categories);
+      setNoteColorPallate(colors);
     }
 
     run();
@@ -105,12 +127,23 @@ export default function AddNote() {
           </View>
         </ScrollView>
 
+
+
+        {/* Save button */}
+        <View style={{ position: "absolute", bottom: 10, right: 0 }}>
+          <TouchableOpacity onPress={handleSaveNote}>
+            <View style={{ backgroundColor: colorBg, borderRadius: 20, padding: 8 }}>
+              <Ionicons name="checkmark-done" size={40} color="red" />
+            </View>
+          </TouchableOpacity>
+        </View>
+
         <View style={{ position: "absolute", bottom: 10 }}>
-          <View style={{ zIndex: 100, backgroundColor: "gray", borderRadius: 20, flex: 1 }}>
+          <View style={{ zIndex: 100, backgroundColor: colorBg, borderRadius: 20, flex: 1 }}>
             <TouchableOpacity onPress={() => setShowOps(!showOps)}>
               <View style={{ marginVertical: 10, alignSelf: "center" }}>
-                {!showOps && <MaterialIcons name="keyboard-double-arrow-up" size={40} color="white" />}
-                {showOps && <MaterialIcons name="keyboard-double-arrow-down" size={40} color="white" />}
+                {!showOps && <MaterialIcons name="keyboard-double-arrow-up" size={40} color={color} />}
+                {showOps && <MaterialIcons name="keyboard-double-arrow-down" size={40} color={color} />}
               </View>
             </TouchableOpacity>
 
@@ -138,7 +171,7 @@ export default function AddNote() {
                     renderItem={({ item }) => (
                       <TouchableOpacity onPress={() => setCategoryId(item.id)}>
                         <View style={{ flex: 1, marginHorizontal: 8, width: "100%" }}>
-                          <ThemedText style={{ fontSize: 20, fontWeight: 600, textTransform: "capitalize", color: item?.id == categoryId ? "red" : "white" }}>{item?.name}</ThemedText>
+                          <ThemedText style={{ fontSize: 20, fontWeight: 600, textTransform: "capitalize", color: item?.id == categoryId ? "red" : color }}>{item?.name}</ThemedText>
                         </View>
                       </TouchableOpacity>
                     )}

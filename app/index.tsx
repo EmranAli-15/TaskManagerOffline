@@ -1,17 +1,19 @@
 import Container from '@/components/Container';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
+import { createNoteTable, getAllDataFromNoteTable } from '@/db/Database';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import Entypo from '@expo/vector-icons/Entypo';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { Link } from 'expo-router';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { FlatList, RefreshControl, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 type TNote = {
     id: number,
     head: string,
     body: string;
+    title: string;
 }
 
 export default function HomeScreen() {
@@ -30,12 +32,33 @@ export default function HomeScreen() {
         { id: 9, head: "#77BEF0", body: "#CBDCEB" },
     ])
 
+
+    const [notes, setNotes] = useState([])
+
     const [numColumns, setNumColumns] = useState(1);
+
+
+    const handleGetNotes = async () => {
+        await createNoteTable();
+        const allNotes = await getAllDataFromNoteTable();
+        setNotes(allNotes);
+    }
+
+    useEffect(() => {
+        const run = async () => {
+            await handleGetNotes()
+        }
+        run();
+    }, [])
+
 
     const [refreshing, setRefreshing] = useState(false);
     const onRefresh = useCallback(() => {
         setRefreshing(true);
-        setData(data);
+        const run = async () => {
+            await handleGetNotes()
+        }
+        run();
         setTimeout(() => {
             setRefreshing(false);
         }, 500);
@@ -94,7 +117,7 @@ export default function HomeScreen() {
 
             <View>
                 <FlatList
-                    data={data}
+                    data={notes}
                     numColumns={numColumns}
                     key={numColumns}
                     keyExtractor={(item: TNote, index) => index.toString()}
@@ -104,7 +127,7 @@ export default function HomeScreen() {
                             <View style={{ height: 10, backgroundColor: item.head }}></View>
                             <View style={{ height: 90, backgroundColor: item.body }}>
                                 <Text style={styles.item}>
-                                    Bolna amay tui bolna.
+                                    {item?.title}
                                 </Text>
                             </View>
 

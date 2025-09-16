@@ -8,6 +8,48 @@ const initDB = async () => {
 
 
 
+
+// FOR NOTES TABLE
+export const createNoteTable = async () => {
+    const db = await initDB();
+    await db.execAsync(`
+        CREATE TABLE IF NOT EXISTS note (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        title VARCHAR(255),
+        details text,
+        category INT,
+        color INT
+        );
+        `);
+};
+
+export const insertDataIntoNoteTable = async ({ title, details, category, color }) => {
+    await db.runAsync(`
+        INSERT INTO note (title, details, category, color)
+        VALUES (?, ?, ?, ?)
+     `,
+        [title, details, category, color]
+    );
+};
+
+export const getAllDataFromNoteTable = async () => {
+    const db = await initDB();
+    const data = await db.getAllAsync(`SELECT note.id, color.head, color.body, title FROM note JOIN color ON note.color = color.id;`);
+    return data;
+};
+
+export const getCategoryDataFromNoteTable = async (category) => {
+    const db = await initDB();
+    const data = await db.getAllAsync(`SELECT * FROM note WHERE category=${category}`);
+    return data;
+};
+
+
+
+
+
+
+
 // FOR COLOR TABLE
 export const createColorTable = async () => {
     const db = await initDB();
