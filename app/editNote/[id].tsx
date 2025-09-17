@@ -15,6 +15,7 @@ import {
     Keyboard,
     ScrollView,
     StyleSheet,
+    Text,
     TextInput,
     TouchableOpacity,
     useColorScheme,
@@ -38,6 +39,7 @@ export default function AddNote() {
 
     const router = useRouter();
     const [readMode, setReadMode] = useState(false);
+    const [savedIndecator, setSavedIndicator] = useState(false);
 
 
     const { id } = useLocalSearchParams();
@@ -66,8 +68,10 @@ export default function AddNote() {
         }
         if (details || title) {
             await updateANoteIntoNoteTable(data);
-            setTitle("");
-            setDetails("");
+            setSavedIndicator(true);
+            setTimeout(() => {
+                setSavedIndicator(false);
+            }, 400);
         }
     };
 
@@ -149,6 +153,8 @@ export default function AddNote() {
                         </>
 
 
+
+
                         <View style={{ flexDirection: "row", justifyContent: "flex-end" }}>
                             <TouchableOpacity onPress={() => setOpenModal(!openModal)}>
                                 <SimpleLineIcons name="options-vertical" size={25} color={color} />
@@ -186,13 +192,20 @@ export default function AddNote() {
                     </View>
                 </ScrollView>
 
+                <>
+                    {
+                        savedIndecator && <View style={{ position: "absolute", zIndex: 10, top: 50, left: "35%", right: "35%", backgroundColor: colorBg, paddingHorizontal: 10, paddingVertical: 5, borderRadius: 5 }}>
+                            <Text style={{ color: "#F97A00", textAlign: "center", fontWeight: 700 }}>Saved !</Text>
+                        </View>
+                    }
+                </>
 
 
                 {/* Save button */}
                 <View style={{ position: "absolute", bottom: 10, right: 0 }}>
                     <TouchableOpacity onPress={handleSaveNote}>
                         <View style={{ backgroundColor: colorBg, borderRadius: 20, padding: 8 }}>
-                            <Ionicons name="checkmark-done" size={40} color="red" />
+                            <Ionicons name="checkmark-done" size={40} color="green" />
                         </View>
                     </TouchableOpacity>
                 </View>

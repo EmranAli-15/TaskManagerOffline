@@ -64,7 +64,7 @@ export default function HomeScreen() {
                 <ScrollView horizontal
                     showsHorizontalScrollIndicator={false}
                     contentContainerStyle={{ gap: 8 }}
-                    style={{ marginTop: 10 }}
+                    style={{ marginTop: 20 }}
                 >
                     <TouchableOpacity onPress={() => setReFetch(!reFetch)}>
                         <ThemedView style={styles.navList}>
@@ -103,9 +103,9 @@ export default function HomeScreen() {
                 <TouchableOpacity onPress={() => setNumColumns(numColumns === 1 ? 2 : 1)}>
                     <View>
                         {
-                            numColumns === 1 ? <MaterialIcons name="checklist" size={35} color="orange" />
+                            numColumns === 1 ? <MaterialIcons name="checklist" size={35} color="#F97A00" />
                                 :
-                                <Entypo name="grid" size={35} color="orange" />
+                                <Entypo name="grid" size={35} color="#F97A00" />
                         }
                     </View>
                 </TouchableOpacity>
