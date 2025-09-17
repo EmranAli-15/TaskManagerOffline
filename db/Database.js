@@ -38,9 +38,33 @@ export const getAllDataFromNoteTable = async () => {
     return data;
 };
 
+export const getSingleNoteFromNoteTable = async (id) => {
+    const db = await initDB();
+    const data = await db.getFirstAsync(`
+        SELECT note.id AS noteId, title, details, category.id As categoryId, color.id AS colorId FROM note
+        INNER JOIN category
+        ON note.category = category.id
+        INNER JOIN color
+        ON note.color = color.id
+        WHERE note.id=${id}
+        `);
+    return data;
+};
+
+export const updateANoteIntoNoteTable = async ({ title, details, color, category, id }) => {
+    const db = await initDB();
+    const data = await db.runAsync(`
+        UPDATE note
+        SET title=?, details=?, color=?, category=?
+        WHERE id=?
+        `,
+        [title, details, color, category, id]
+    )
+}
+
 export const getCategoryDataFromNoteTable = async (category) => {
     const db = await initDB();
-    const data = await db.getAllAsync(`SELECT * FROM note WHERE category=${category}`);
+    const data = await db.getAllAsync(`SELECT note.id, color.head, color.body, title FROM note JOIN color ON note.color = color.id WHERE category=${category}`);
     return data;
 };
 

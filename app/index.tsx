@@ -1,7 +1,7 @@
 import Container from '@/components/Container';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
-import { createNoteTable, getAllDataFromNoteTable } from '@/db/Database';
+import { createNoteTable, getAllDataFromNoteTable, getCategoryDataFromNoteTable } from '@/db/Database';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import Entypo from '@expo/vector-icons/Entypo';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
@@ -17,26 +17,10 @@ type TNote = {
 }
 
 export default function HomeScreen() {
-    const [data, setData] = useState([
-        { id: 1, head: "#77BEF0", body: "#CBDCEB" },
-        { id: 2, head: "#ffdc75", body: "#fff2cc" },
-        { id: 3, head: "#eca3a3", body: "#f6d6d6" },
-        { id: 4, head: "#a5d732", body: "#ddf0b2" },
-        { id: 5, head: "#d94c9f", body: "#f4cce3" },
-        { id: 6, head: "#875ab2", body: "#d2c1e2" },
-        { id: 8, head: "#77BEF0", body: "#CBDCEB" },
-        { id: 9, head: "#77BEF0", body: "#CBDCEB" },
-        { id: 9, head: "#77BEF0", body: "#CBDCEB" },
-        { id: 9, head: "#77BEF0", body: "#CBDCEB" },
-        { id: 9, head: "#77BEF0", body: "#CBDCEB" },
-        { id: 9, head: "#77BEF0", body: "#CBDCEB" },
-    ])
-
 
     const [notes, setNotes] = useState([])
 
     const [numColumns, setNumColumns] = useState(1);
-
 
     const handleGetNotes = async () => {
         await createNoteTable();
@@ -49,7 +33,12 @@ export default function HomeScreen() {
             await handleGetNotes()
         }
         run();
-    }, [])
+    }, []);
+
+    const handleGetCategoryNotes = async (category: number) => {
+        const allNotes = await getCategoryDataFromNoteTable(category);
+        setNotes(allNotes);
+    }
 
 
     const [refreshing, setRefreshing] = useState(false);
@@ -79,21 +68,31 @@ export default function HomeScreen() {
                     <ThemedView style={styles.navList}>
                         <ThemedText style={styles.navListText}>All Notes</ThemedText>
                     </ThemedView>
-                    <ThemedView style={styles.navList}>
-                        <ThemedText style={styles.navListText}>Today</ThemedText>
-                    </ThemedView>
-                    <ThemedView style={styles.navList}>
-                        <ThemedText style={styles.navListText}>Exams</ThemedText>
-                    </ThemedView>
-                    <ThemedView style={styles.navList}>
-                        <ThemedText style={styles.navListText}>Tasks</ThemedText>
-                    </ThemedView>
-                    <ThemedView style={styles.navList}>
-                        <ThemedText style={styles.navListText}>Projects</ThemedText>
-                    </ThemedView>
-                    <ThemedView style={styles.navList}>
-                        <ThemedText style={styles.navListText}>Ideas</ThemedText>
-                    </ThemedView>
+                    <TouchableOpacity onPress={() => handleGetCategoryNotes(1)}>
+                        <ThemedView style={styles.navList}>
+                            <ThemedText style={styles.navListText}>Today</ThemedText>
+                        </ThemedView>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => handleGetCategoryNotes(2)}>
+                        <ThemedView style={styles.navList}>
+                            <ThemedText style={styles.navListText}>Exams</ThemedText>
+                        </ThemedView>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => handleGetCategoryNotes(3)}>
+                        <ThemedView style={styles.navList}>
+                            <ThemedText style={styles.navListText}>Tasks</ThemedText>
+                        </ThemedView>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => handleGetCategoryNotes(4)}>
+                        <ThemedView style={styles.navList}>
+                            <ThemedText style={styles.navListText}>Projects</ThemedText>
+                        </ThemedView>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => handleGetCategoryNotes(5)}>
+                        <ThemedView style={styles.navList}>
+                            <ThemedText style={styles.navListText}>Ideas</ThemedText>
+                        </ThemedView>
+                    </TouchableOpacity>
                 </ScrollView>
             </View>
 
@@ -122,16 +121,25 @@ export default function HomeScreen() {
                     key={numColumns}
                     keyExtractor={(item: TNote, index) => index.toString()}
                     renderItem={({ item }) => (
-                        <View style={[styles.box, { width: numColumns == 2 ? "50%" : "auto", marginHorizontal: 3, flex: 1 }]}>
 
-                            <View style={{ height: 10, backgroundColor: item.head }}></View>
-                            <View style={{ height: 90, backgroundColor: item.body }}>
-                                <Text style={styles.item}>
-                                    {item?.title}
-                                </Text>
+
+                        <Link
+                            style={{ width: numColumns == 2 ? "50%" : "auto", marginTop: 5, flex: 1, paddingHorizontal: 3 }}
+                            href={{
+                                pathname: '/editNote/[id]',
+                                params: { id: item.id },
+                            }}>
+                            <View style={[styles.box]}>
+
+                                <View style={{ height: 10, backgroundColor: item.head }}></View>
+                                <View style={{ height: 90, backgroundColor: item.body }}>
+                                    <Text style={styles.item}>
+                                        {item.title.length > 30 ? <Text>{item.title.slice(0, 30)}...</Text> : item.title}
+                                    </Text>
+                                </View>
+
                             </View>
-
-                        </View>
+                        </Link>
                     )}
                     refreshControl={
                         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
@@ -154,7 +162,7 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         overflow: "hidden",
         flex: 1,
-        marginTop: 5,
+        width: "100%",
     },
     addNote: {
         position: "absolute",
