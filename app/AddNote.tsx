@@ -4,6 +4,7 @@ import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 
 import Container from '@/components/Container';
 import { ThemedText } from "@/components/themed-text";
+import { useRouter } from "expo-router";
 import React, { useEffect, useRef, useState } from 'react';
 import {
   FlatList,
@@ -31,6 +32,7 @@ export default function AddNote() {
     colorBg = "#fff";
   }
 
+  const router = useRouter();
 
   const [showOps, setShowOps] = useState(false);
 
@@ -56,6 +58,7 @@ export default function AddNote() {
       await insertDataIntoNoteTable(data);
       setTitle("");
       setDetails("");
+      router.navigate("/");
     }
   }
 
@@ -133,7 +136,7 @@ export default function AddNote() {
         <View style={{ position: "absolute", bottom: 10, right: 0 }}>
           <TouchableOpacity onPress={handleSaveNote}>
             <View style={{ backgroundColor: colorBg, borderRadius: 20, padding: 8 }}>
-              <Ionicons name="checkmark-done" size={40} color="red" />
+              <Ionicons name="checkmark-done" size={40} color="green" />
             </View>
           </TouchableOpacity>
         </View>

@@ -1,5 +1,6 @@
-import { getDataFromCategoryTable, getDataFromColorTable, getSingleNoteFromNoteTable, updateANoteIntoNoteTable } from "@/db/Database";
+import { deleteNoteFromNoteTable, getDataFromCategoryTable, getDataFromColorTable, getSingleNoteFromNoteTable, updateANoteIntoNoteTable } from "@/db/Database";
 import AntDesign from '@expo/vector-icons/AntDesign';
+import Entypo from '@expo/vector-icons/Entypo';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import SimpleLineIcons from '@expo/vector-icons/SimpleLineIcons';
@@ -7,7 +8,7 @@ import SimpleLineIcons from '@expo/vector-icons/SimpleLineIcons';
 import Container from '@/components/Container';
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
-import { useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useRef, useState } from 'react';
 import {
     FlatList,
@@ -34,6 +35,9 @@ export default function AddNote() {
         color = "black";
         colorBg = "#fff";
     }
+
+    const router = useRouter();
+    const [readMode, setReadMode] = useState(false);
 
 
     const { id } = useLocalSearchParams();
@@ -65,6 +69,11 @@ export default function AddNote() {
             setTitle("");
             setDetails("");
         }
+    };
+
+    const handleDeleteNote = async () => {
+        await deleteNoteFromNoteTable(id);
+        router.navigate("/");
     }
 
 
@@ -114,8 +123,27 @@ export default function AddNote() {
 
                         <>
                             {
-                                openModal && <ThemedView style={{ position: "absolute", top: 50, right: 10, zIndex: 10, padding: 10, paddingHorizontal: 50, borderRadius: 5 }}>
-                                    <AntDesign name="delete" size={24} color="red" />
+                                openModal && <ThemedView style={{ position: "absolute", top: 35, right: 0, zIndex: 10, padding: 10, paddingHorizontal: 50, borderRadius: 5, }}>
+                                    <View style={{ flex: 1, alignItems: "center", borderBottomWidth: 1 }}>
+                                        <TouchableOpacity onPress={handleDeleteNote}>
+                                            <AntDesign name="delete" size={24} color="red" />
+                                        </TouchableOpacity>
+                                    </View>
+                                    <View style={{ flex: 1, alignItems: "center", marginTop: 20 }}>
+                                        <TouchableOpacity
+                                            onPress={() => setReadMode(!readMode)}>
+                                            {
+                                                readMode ? <View style={{ flex: 1, alignItems: "center" }}>
+                                                    <Entypo name="eye" size={24} color="#F97A00" />
+                                                    <ThemedText>Reading Mode</ThemedText>
+                                                </View> :
+                                                    <View style={{ flex: 1, alignItems: "center" }}>
+                                                        <Entypo name="edit" size={24} color="#F97A00" />
+                                                        <ThemedText>Edit Mode</ThemedText>
+                                                    </View>
+                                            }
+                                        </TouchableOpacity>
+                                    </View>
                                 </ThemedView>
                             }
                         </>
@@ -133,6 +161,7 @@ export default function AddNote() {
                             placeholderTextColor={noteColorPallate[noteColor]?.body}
                             placeholder='Title'
                             value={title}
+                            readOnly={readMode}
                             ref={(ref) => {
                                 titleRef && (titleRef.current = ref as any);
                             }}
@@ -148,6 +177,7 @@ export default function AddNote() {
                                 placeholderTextColor="gray"
                                 placeholder='Details ...'
                                 value={details}
+                                readOnly={readMode}
                                 ref={(ref) => {
                                     detailsRef && (detailsRef.current = ref as any);
                                 }}

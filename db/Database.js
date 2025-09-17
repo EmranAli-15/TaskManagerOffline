@@ -68,6 +68,15 @@ export const getCategoryDataFromNoteTable = async (category) => {
     return data;
 };
 
+export const deleteNoteFromNoteTable = async (id) => {
+    const db = await initDB();
+    await db.runAsync(`
+        DELETE FROM note WHERE id=?
+        `,
+        [id]
+    )
+}
+
 
 
 
