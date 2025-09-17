@@ -1,9 +1,12 @@
 import { getDataFromCategoryTable, getDataFromColorTable, getSingleNoteFromNoteTable, updateANoteIntoNoteTable } from "@/db/Database";
+import AntDesign from '@expo/vector-icons/AntDesign';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import SimpleLineIcons from '@expo/vector-icons/SimpleLineIcons';
 
 import Container from '@/components/Container';
 import { ThemedText } from "@/components/themed-text";
+import { ThemedView } from "@/components/themed-view";
 import { useLocalSearchParams } from "expo-router";
 import React, { useEffect, useRef, useState } from 'react';
 import {
@@ -36,6 +39,7 @@ export default function AddNote() {
     const { id } = useLocalSearchParams();
 
     const [showOps, setShowOps] = useState(false);
+    const [openModal, setOpenModal] = useState(false);
 
     const [title, setTitle] = useState("");
     const [details, setDetails] = useState("");
@@ -106,6 +110,22 @@ export default function AddNote() {
             <View style={{ flex: 1, height: "100%" }}>
                 <ScrollView>
                     <View>
+
+
+                        <>
+                            {
+                                openModal && <ThemedView style={{ position: "absolute", top: 50, right: 10, zIndex: 10, padding: 10, paddingHorizontal: 50, borderRadius: 5 }}>
+                                    <AntDesign name="delete" size={24} color="red" />
+                                </ThemedView>
+                            }
+                        </>
+
+
+                        <View style={{ flexDirection: "row", justifyContent: "flex-end" }}>
+                            <TouchableOpacity onPress={() => setOpenModal(!openModal)}>
+                                <SimpleLineIcons name="options-vertical" size={25} color={color} />
+                            </TouchableOpacity>
+                        </View>
                         <TextInput
                             multiline={true}
                             style={[styles.title, { color: noteColorPallate[noteColor]?.head }]}

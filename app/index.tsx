@@ -17,6 +17,7 @@ type TNote = {
 }
 
 export default function HomeScreen() {
+    const [reFetch, setReFetch] = useState(true);
 
     const [notes, setNotes] = useState([])
 
@@ -33,7 +34,7 @@ export default function HomeScreen() {
             await handleGetNotes()
         }
         run();
-    }, []);
+    }, [reFetch]);
 
     const handleGetCategoryNotes = async (category: number) => {
         const allNotes = await getCategoryDataFromNoteTable(category);
@@ -65,9 +66,11 @@ export default function HomeScreen() {
                     contentContainerStyle={{ gap: 8 }}
                     style={{ marginTop: 10 }}
                 >
-                    <ThemedView style={styles.navList}>
-                        <ThemedText style={styles.navListText}>All Notes</ThemedText>
-                    </ThemedView>
+                    <TouchableOpacity onPress={() => setReFetch(!reFetch)}>
+                        <ThemedView style={styles.navList}>
+                            <ThemedText style={styles.navListText}>All Notes</ThemedText>
+                        </ThemedView>
+                    </TouchableOpacity>
                     <TouchableOpacity onPress={() => handleGetCategoryNotes(1)}>
                         <ThemedView style={styles.navList}>
                             <ThemedText style={styles.navListText}>Today</ThemedText>
