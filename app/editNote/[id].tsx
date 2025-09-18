@@ -38,14 +38,15 @@ export default function AddNote() {
     }
 
     const router = useRouter();
+
+    const [showOps, setShowOps] = useState(false);
     const [readMode, setReadMode] = useState(false);
+    const [openModal, setOpenModal] = useState(false);
     const [savedIndecator, setSavedIndicator] = useState(false);
 
 
     const { id } = useLocalSearchParams();
 
-    const [showOps, setShowOps] = useState(false);
-    const [openModal, setOpenModal] = useState(false);
 
     const [title, setTitle] = useState("");
     const [details, setDetails] = useState("");
@@ -138,11 +139,11 @@ export default function AddNote() {
                                             onPress={() => setReadMode(!readMode)}>
                                             {
                                                 readMode ? <View style={{ flex: 1, alignItems: "center" }}>
-                                                    <Entypo name="eye" size={24} color="#F97A00" />
+                                                    <Entypo name="eye" size={24} color="#0077b6" />
                                                     <ThemedText>Reading Mode</ThemedText>
                                                 </View> :
                                                     <View style={{ flex: 1, alignItems: "center" }}>
-                                                        <Entypo name="edit" size={24} color="#F97A00" />
+                                                        <Entypo name="edit" size={24} color="#0077b6" />
                                                         <ThemedText>Edit Mode</ThemedText>
                                                     </View>
                                             }
@@ -194,7 +195,7 @@ export default function AddNote() {
 
                 <>
                     {
-                        savedIndecator && <View style={{ position: "absolute", zIndex: 10, top: 50, left: "35%", right: "35%", backgroundColor: colorBg, paddingHorizontal: 10, paddingVertical: 5, borderRadius: 5 }}>
+                        savedIndecator && <View style={[styles.savedIndecator, { backgroundColor: colorBg }]}>
                             <Text style={{ color: "#F97A00", textAlign: "center", fontWeight: 700 }}>Saved !</Text>
                         </View>
                     }
@@ -204,8 +205,8 @@ export default function AddNote() {
                 {/* Save button */}
                 <View style={{ position: "absolute", bottom: 10, right: 0 }}>
                     <TouchableOpacity onPress={handleSaveNote}>
-                        <View style={{ backgroundColor: colorBg, borderRadius: 20, padding: 8 }}>
-                            <Ionicons name="checkmark-done" size={40} color="green" />
+                        <View style={{ backgroundColor: "#0077b6", borderRadius: 20, padding: 8 }}>
+                            <Ionicons name="checkmark-done" size={40} color="white" />
                         </View>
                     </TouchableOpacity>
                 </View>
@@ -243,7 +244,7 @@ export default function AddNote() {
                                         renderItem={({ item }) => (
                                             <TouchableOpacity onPress={() => setCategoryId(item.id)}>
                                                 <View style={{ flex: 1, marginHorizontal: 8, width: "100%" }}>
-                                                    <ThemedText style={{ fontSize: 20, fontWeight: 600, textTransform: "capitalize", color: item?.id == categoryId ? "red" : color }}>{item?.name}</ThemedText>
+                                                    <ThemedText style={{ fontSize: 20, fontWeight: 600, textTransform: "capitalize", color: item?.id == categoryId ? "#0077b6" : color }}>{item?.name}</ThemedText>
                                                 </View>
                                             </TouchableOpacity>
                                         )}
@@ -284,5 +285,15 @@ const styles = StyleSheet.create({
         height: 50,
         width: 50,
         borderRadius: "50%",
+    },
+    savedIndecator: {
+        position: "absolute",
+        zIndex: 10,
+        top: 50,
+        left: "35%",
+        right: "35%",
+        paddingHorizontal: 10,
+        paddingVertical: 5,
+        borderRadius: 5
     }
 })

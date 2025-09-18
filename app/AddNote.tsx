@@ -135,8 +135,8 @@ export default function AddNote() {
         {/* Save button */}
         <View style={{ position: "absolute", bottom: 10, right: 0 }}>
           <TouchableOpacity onPress={handleSaveNote}>
-            <View style={{ backgroundColor: colorBg, borderRadius: 20, padding: 8 }}>
-              <Ionicons name="checkmark-done" size={40} color="green" />
+            <View style={{ backgroundColor: "#0077b6", borderRadius: 20, padding: 8 }}>
+              <Ionicons name="checkmark-done" size={40} color="white" />
             </View>
           </TouchableOpacity>
         </View>
@@ -174,7 +174,7 @@ export default function AddNote() {
                     renderItem={({ item }) => (
                       <TouchableOpacity onPress={() => setCategoryId(item.id)}>
                         <View style={{ flex: 1, marginHorizontal: 8, width: "100%" }}>
-                          <ThemedText style={{ fontSize: 20, fontWeight: 600, textTransform: "capitalize", color: item?.id == categoryId ? "red" : color }}>{item?.name}</ThemedText>
+                          <ThemedText style={{ fontSize: 20, fontWeight: 600, textTransform: "capitalize", color: item?.id == categoryId ? "#0077b6" : color }}>{item?.name}</ThemedText>
                         </View>
                       </TouchableOpacity>
                     )}

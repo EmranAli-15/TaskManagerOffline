@@ -1,7 +1,7 @@
 import Container from '@/components/Container';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
-import { createNoteTable, getAllDataFromNoteTable, getCategoryDataFromNoteTable } from '@/db/Database';
+import { createCategoryTable, createColorTable, createNoteTable, getAllDataFromNoteTable, getCategoryDataFromNoteTable, insertDataIntoCategoryTable, insertDataIntoColorTable } from '@/db/Database';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import Entypo from '@expo/vector-icons/Entypo';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
@@ -17,24 +17,15 @@ type TNote = {
 }
 
 export default function HomeScreen() {
-    const [reFetch, setReFetch] = useState(true);
-
+    const [reFetch, setReFetch] = useState(false);
     const [notes, setNotes] = useState([])
-
     const [numColumns, setNumColumns] = useState(1);
 
     const handleGetNotes = async () => {
-        await createNoteTable();
+
         const allNotes = await getAllDataFromNoteTable();
         setNotes(allNotes);
     }
-
-    useEffect(() => {
-        const run = async () => {
-            await handleGetNotes()
-        }
-        run();
-    }, [reFetch]);
 
     const handleGetCategoryNotes = async (category: number) => {
         const allNotes = await getCategoryDataFromNoteTable(category);
@@ -42,13 +33,33 @@ export default function HomeScreen() {
     }
 
 
+    useEffect(() => {
+        const run = async () => {
+            if (reFetch) {
+                await handleGetNotes()
+                setReFetch(false);
+            }
+        }
+        run();
+    }, [reFetch]);
+    useEffect(() => {
+        const run = async () => {
+            await createColorTable();
+            await insertDataIntoColorTable();
+            await createCategoryTable();
+            await insertDataIntoCategoryTable();
+            await createNoteTable();
+            await handleGetNotes();
+        }
+        run();
+    }, [])
+
+
     const [refreshing, setRefreshing] = useState(false);
     const onRefresh = useCallback(() => {
         setRefreshing(true);
-        const run = async () => {
-            await handleGetNotes()
-        }
-        run();
+        handleGetNotes()
+
         setTimeout(() => {
             setRefreshing(false);
         }, 500);
@@ -66,7 +77,7 @@ export default function HomeScreen() {
                     contentContainerStyle={{ gap: 8 }}
                     style={{ marginTop: 20 }}
                 >
-                    <TouchableOpacity onPress={() => setReFetch(!reFetch)}>
+                    <TouchableOpacity onPress={() => setReFetch(true)}>
                         <ThemedView style={styles.navList}>
                             <ThemedText style={styles.navListText}>All Notes</ThemedText>
                         </ThemedView>
@@ -103,9 +114,9 @@ export default function HomeScreen() {
                 <TouchableOpacity onPress={() => setNumColumns(numColumns === 1 ? 2 : 1)}>
                     <View>
                         {
-                            numColumns === 1 ? <MaterialIcons name="checklist" size={35} color="#F97A00" />
+                            numColumns === 1 ? <MaterialIcons name="checklist" size={35} color="#0077b6" />
                                 :
-                                <Entypo name="grid" size={35} color="#F97A00" />
+                                <Entypo name="grid" size={35} color="#0077b6" />
                         }
                     </View>
                 </TouchableOpacity>
@@ -121,6 +132,9 @@ export default function HomeScreen() {
                 <FlatList
                     data={notes}
                     numColumns={numColumns}
+                    ListEmptyComponent={<View>
+                        <ThemedText style={{ color: "gray", textAlign: "center", marginTop: 10 }}>No notes !</ThemedText>
+                    </View>}
                     key={numColumns}
                     keyExtractor={(item: TNote, index) => index.toString()}
                     renderItem={({ item }) => (
@@ -158,7 +172,7 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
     item: {
         margin: 10,
-        fontSize: 18,
+        fontSize: 19,
         color: "black",
     },
     box: {

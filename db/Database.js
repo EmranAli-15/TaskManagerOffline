@@ -1,15 +1,21 @@
 import * as SQLite from "expo-sqlite";
 
+
+// DATABASE OPEN ===========================================
 let db = null;
 const initDB = async () => {
     if (!db) db = await SQLite.openDatabaseAsync("taskManager");
     return db;
 };
+// DATABASE OPEN ===========================================
 
 
 
 
-// FOR NOTES TABLE
+
+
+
+// FOR NOTES TABLE ===========================================
 export const createNoteTable = async () => {
     const db = await initDB();
     await db.execAsync(`
@@ -34,7 +40,7 @@ export const insertDataIntoNoteTable = async ({ title, details, category, color 
 
 export const getAllDataFromNoteTable = async () => {
     const db = await initDB();
-    const data = await db.getAllAsync(`SELECT note.id, color.head, color.body, title FROM note JOIN color ON note.color = color.id;`);
+    const data = await db.getAllAsync(`SELECT note.id, color.head, color.body, title FROM note JOIN color ON note.color = color.id ORDER BY note.id DESC;`);
     return data;
 };
 
@@ -53,7 +59,7 @@ export const getSingleNoteFromNoteTable = async (id) => {
 
 export const updateANoteIntoNoteTable = async ({ title, details, color, category, id }) => {
     const db = await initDB();
-    const data = await db.runAsync(`
+    await db.runAsync(`
         UPDATE note
         SET title=?, details=?, color=?, category=?
         WHERE id=?
@@ -64,7 +70,7 @@ export const updateANoteIntoNoteTable = async ({ title, details, color, category
 
 export const getCategoryDataFromNoteTable = async (category) => {
     const db = await initDB();
-    const data = await db.getAllAsync(`SELECT note.id, color.head, color.body, title FROM note JOIN color ON note.color = color.id WHERE category=${category}`);
+    const data = await db.getAllAsync(`SELECT note.id, color.head, color.body, title FROM note JOIN color ON note.color = color.id WHERE category=${category} ORDER BY note.id DESC`);
     return data;
 };
 
@@ -76,14 +82,14 @@ export const deleteNoteFromNoteTable = async (id) => {
         [id]
     )
 }
+// FOR NOTES TABLE ===========================================
 
 
 
 
 
 
-
-// FOR COLOR TABLE
+// FOR COLOR TABLE ============================================
 export const createColorTable = async () => {
     const db = await initDB();
     await db.execAsync(`CREATE TABLE IF NOT EXISTS color (id INTEGER PRIMARY KEY AUTOINCREMENT, head VARCHAR(15), body VARCHAR(15));`);
@@ -112,10 +118,14 @@ export const getDataFromColorTable = async () => {
     const data = await db.getAllAsync(`SELECT * FROM color;`);
     return data;
 };
+// FOR COLOR TABLE ============================================
 
 
 
-// FOR CATEGORY TABLE
+
+
+
+// FOR CATEGORY TABLE ======================================
 export const createCategoryTable = async () => {
     const db = await initDB();
     await db.execAsync(`CREATE TABLE IF NOT EXISTS category (id INTEGER PRIMARY KEY AUTOINCREMENT, name VARCHAR(15));`);
@@ -142,3 +152,31 @@ export const getDataFromCategoryTable = async () => {
     const data = await db.getAllAsync(`SELECT * FROM category;`);
     return data;
 };
+// FOR CATEGORY TABLE ======================================
+
+
+
+
+
+
+
+
+
+
+
+
+// 🚫VERY SENSETIVE -> IT'S FOR DELETE THE ENTIRE DATABASE
+export const closeDB = async () => {
+    if (db) {
+        // await db.closeAsync();
+        db = null;
+    }
+};
+export const deleteDB = async () => {
+    await closeDB();
+    try {
+        // await SQLite.deleteDatabaseAsync("taskManager");
+    } catch (err) {
+    }
+};
+// 🚫VERY SENSETIVE -> IT'S FOR DELETE THE ENTIRE DATABASE
