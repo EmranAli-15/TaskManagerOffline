@@ -1,6 +1,9 @@
 {
   "expo": {
     "name": "Notes",
+    "assetBundlePatterns": [
+      "./assets/database/*"
+    ],
     "slug": "TaskManagerOffline",
     "version": "1.0.0",
     "orientation": "portrait",

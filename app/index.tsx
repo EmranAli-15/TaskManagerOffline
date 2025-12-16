@@ -1,13 +1,15 @@
 import Container from '@/components/Container';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
-import { createCategoryTable, createColorTable, createNoteTable, getAllDataFromNoteTable, getCategoryDataFromNoteTable, insertDataIntoCategoryTable, insertDataIntoColorTable } from '@/db/Database';
+import { getCategoryDataFromNoteTable } from '@/db/Database';
+import { getAllDataFromNoteTable } from '@/db/db';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import Entypo from '@expo/vector-icons/Entypo';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
-import { Link } from 'expo-router';
+import { Link, useRouter } from 'expo-router';
 import React, { useCallback, useEffect, useState } from 'react';
-import { FlatList, RefreshControl, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, FlatList, RefreshControl, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { prepareDatabase } from '../db/init';
 
 type TNote = {
     id: number,
@@ -16,13 +18,19 @@ type TNote = {
     title: string;
 }
 
+const navTitles = ["Today", "Exams", "Tasks", "Projects", "Ideas"];
+
 export default function HomeScreen() {
+    const [ready, setReady] = useState(false);
+    const router = useRouter();
+
+    const [notes, setNotes] = useState([]);
+    const [categories, setCategories] = useState([]);
+
     const [reFetch, setReFetch] = useState(false);
-    const [notes, setNotes] = useState([])
     const [numColumns, setNumColumns] = useState(1);
 
     const handleGetNotes = async () => {
-
         const allNotes = await getAllDataFromNoteTable();
         setNotes(allNotes);
     }
@@ -32,7 +40,6 @@ export default function HomeScreen() {
         setNotes(allNotes);
     }
 
-
     useEffect(() => {
         const run = async () => {
             if (reFetch) {
@@ -40,18 +47,17 @@ export default function HomeScreen() {
                 setReFetch(false);
             }
         }
-        run();
+        // run();
     }, [reFetch]);
     useEffect(() => {
-        const run = async () => {
-            await createColorTable();
-            await insertDataIntoColorTable();
-            await createCategoryTable();
-            await insertDataIntoCategoryTable();
-            await createNoteTable();
-            await handleGetNotes();
-        }
-        run();
+        (async () => {
+            try {
+                await prepareDatabase();
+                setReady(true);
+            } catch (e) {
+                console.error('DB init error:', e);
+            }
+        })();
     }, [])
 
 
@@ -65,6 +71,15 @@ export default function HomeScreen() {
         }, 500);
     }, []);
 
+
+    if (!ready) {
+        return (
+            <View style={{ flex: 1, justifyContent: 'center' }}>
+                <ActivityIndicator size="large" />
+            </View>
+        );
+    }
+
     return (
         <Container>
             <ThemedText style={{ fontSize: 30, fontWeight: 700 }}>
@@ -72,7 +87,8 @@ export default function HomeScreen() {
             </ThemedText>
 
             <View>
-                <ScrollView horizontal
+                <ScrollView
+                    horizontal
                     showsHorizontalScrollIndicator={false}
                     contentContainerStyle={{ gap: 8 }}
                     style={{ marginTop: 20 }}
@@ -82,29 +98,23 @@ export default function HomeScreen() {
                             <ThemedText style={styles.navListText}>All Notes</ThemedText>
                         </ThemedView>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={() => handleGetCategoryNotes(1)}>
+
+                    {
+                        navTitles.map((nav: any, idx) => <TouchableOpacity
+                            key={idx}
+                            onPress={() => handleGetCategoryNotes(idx + 1)}
+                        >
+                            <ThemedView style={styles.navList}>
+                                <ThemedText style={styles.navListText}>{nav}</ThemedText>
+                            </ThemedView>
+                        </TouchableOpacity>)
+                    }
+
+                    <TouchableOpacity>
                         <ThemedView style={styles.navList}>
-                            <ThemedText style={styles.navListText}>Today</ThemedText>
-                        </ThemedView>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={() => handleGetCategoryNotes(2)}>
-                        <ThemedView style={styles.navList}>
-                            <ThemedText style={styles.navListText}>Exams</ThemedText>
-                        </ThemedView>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={() => handleGetCategoryNotes(3)}>
-                        <ThemedView style={styles.navList}>
-                            <ThemedText style={styles.navListText}>Tasks</ThemedText>
-                        </ThemedView>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={() => handleGetCategoryNotes(4)}>
-                        <ThemedView style={styles.navList}>
-                            <ThemedText style={styles.navListText}>Projects</ThemedText>
-                        </ThemedView>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={() => handleGetCategoryNotes(5)}>
-                        <ThemedView style={styles.navList}>
-                            <ThemedText style={styles.navListText}>Ideas</ThemedText>
+                            <ThemedText style={styles.navListText}>
+                                <AntDesign name="plus" size={24} color="#0077b6" />
+                            </ThemedText>
                         </ThemedView>
                     </TouchableOpacity>
                 </ScrollView>
@@ -122,18 +132,19 @@ export default function HomeScreen() {
                 </TouchableOpacity>
             </View>
 
-            <View style={styles.addNote}>
-                <Link href="/AddNote">
-                    <AntDesign name="file-add" size={24} color="white" />
-                </Link>
-            </View>
+            <TouchableOpacity
+                onPress={() => router.navigate("/AddNote")}
+                style={styles.addNote}
+            >
+                <AntDesign name="file-add" size={24} color="white" />
+            </TouchableOpacity>
 
-            <View>
+            <View style={{ flex: 1 }}>
                 <FlatList
                     data={notes}
                     numColumns={numColumns}
                     ListEmptyComponent={<View>
-                        <ThemedText style={{ color: "gray", textAlign: "center", marginTop: 10 }}>No notes !</ThemedText>
+                        <ThemedText style={{ color: "gray", textAlign: "center", marginTop: 10 }}>No { } notes !</ThemedText>
                     </View>}
                     key={numColumns}
                     keyExtractor={(item: TNote, index) => index.toString()}
@@ -195,10 +206,11 @@ const styles = StyleSheet.create({
         justifyContent: "flex-end"
     },
     navList: {
+        paddingVertical: 4,
         paddingHorizontal: 8,
-        borderRadius: 5
+        borderRadius: 50,
     },
     navListText: {
-        fontSize: 18
+        fontSize: 16
     }
 });

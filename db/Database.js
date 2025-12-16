@@ -2,12 +2,14 @@ import * as SQLite from "expo-sqlite";
 
 
 // DATABASE OPEN ===========================================
+const DB_NAME = "taskManager"
 let db = null;
 const initDB = async () => {
-    if (!db) db = await SQLite.openDatabaseAsync("taskManager");
+    if (!db) db = await SQLite.openDatabaseAsync(DB_NAME);
     return db;
 };
-// DATABASE OPEN ===========================================
+
+// DATABASE OPEN END ===========================================
 
 
 
@@ -19,13 +21,15 @@ const initDB = async () => {
 export const createNoteTable = async () => {
     const db = await initDB();
     await db.execAsync(`
-        CREATE TABLE IF NOT EXISTS note (
+        CREATE TABLE note (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         title VARCHAR(255),
         details text,
-        category INT,
-        color INT
-        );
+        category_id INTEGER,
+        color_id INTEGER,
+        FOREIGN KEY (color_id) REFERENCES color(id),
+        FOREIGN KEY (category_id) REFERENCES category(id) ON DELETE CASCADE
+    );
         `);
 };
 
@@ -41,7 +45,7 @@ export const insertDataIntoNoteTable = async ({ title, details, category, color 
 export const getAllDataFromNoteTable = async () => {
     const db = await initDB();
     const data = await db.getAllAsync(`SELECT note.id, color.head, color.body, title FROM note JOIN color ON note.color = color.id ORDER BY note.id DESC;`);
-    return data;
+    return data
 };
 
 export const getSingleNoteFromNoteTable = async (id) => {
@@ -92,7 +96,13 @@ export const deleteNoteFromNoteTable = async (id) => {
 // FOR COLOR TABLE ============================================
 export const createColorTable = async () => {
     const db = await initDB();
-    await db.execAsync(`CREATE TABLE IF NOT EXISTS color (id INTEGER PRIMARY KEY AUTOINCREMENT, head VARCHAR(15), body VARCHAR(15));`);
+    await db.execAsync(`
+        CREATE TABLE color (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        head VARCHAR(15),
+        body VARCHAR(15)
+    );
+        `);
 };
 
 export const insertDataIntoColorTable = async () => {
@@ -128,7 +138,12 @@ export const getDataFromColorTable = async () => {
 // FOR CATEGORY TABLE ======================================
 export const createCategoryTable = async () => {
     const db = await initDB();
-    await db.execAsync(`CREATE TABLE IF NOT EXISTS category (id INTEGER PRIMARY KEY AUTOINCREMENT, name VARCHAR(15));`);
+    await db.execAsync(`
+        CREATE TABLE category (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name VARCHAR(15)
+    );
+        `);
 };
 
 export const insertDataIntoCategoryTable = async () => {
@@ -168,14 +183,14 @@ export const getDataFromCategoryTable = async () => {
 // 🚫VERY SENSETIVE -> IT'S FOR DELETE THE ENTIRE DATABASE
 export const closeDB = async () => {
     if (db) {
-        // await db.closeAsync();
+        await db.closeAsync();
         db = null;
     }
 };
 export const deleteDB = async () => {
     await closeDB();
     try {
-        // await SQLite.deleteDatabaseAsync("taskManager");
+        await SQLite.deleteDatabaseAsync(DB_NAME);
     } catch (err) {
     }
 };
