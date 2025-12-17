@@ -3,13 +3,13 @@ import MyModal from '@/components/MyModal';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { getCategoryDataFromNoteTable } from '@/db/Database';
-import { getAllDataFromNoteTable, getCategories } from '@/db/db';
+import { addNewCategory, getAllDataFromNoteTable, getCategories } from '@/db/db';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import Entypo from '@expo/vector-icons/Entypo';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { Link, useRouter } from 'expo-router';
 import React, { useCallback, useEffect, useState } from 'react';
-import { ActivityIndicator, FlatList, RefreshControl, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, FlatList, RefreshControl, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { prepareDatabase } from '../db/init';
 
 type TNote = {
@@ -26,11 +26,12 @@ export default function HomeScreen() {
     const router = useRouter();
 
     const [deleteCategoryModal, setDeleteCategoryModal] = useState(false);
-    const [addCategoryModal, setAddCategoryModal] = useState(false)
+    const [addCategoryModal, setAddCategoryModal] = useState(false);
+    const [newCategoryName, setNewCategoryName] = useState<any>("");
 
     const [notes, setNotes] = useState([]);
     const [categories, setCategories] = useState([]);
-    const [currentCategory, setCurrentCategory] = useState();
+    const [currentCategory, setCurrentCategory] = useState("");
 
     const [reFetch, setReFetch] = useState(false);
     const [numColumns, setNumColumns] = useState(1);
@@ -45,12 +46,25 @@ export default function HomeScreen() {
         setNotes(allNotes);
     }
 
+    const handleAddCategory = async () => {
+        if (!newCategoryName) {
+            console.log("first")
+            return setAddCategoryModal(false)
+        }
+        else {
+            console.log(newCategoryName)
+            await addNewCategory({ name: newCategoryName });
+            setAddCategoryModal(false);
+        }
+    }
+
     useEffect(() => {
         (async () => {
             try {
                 const data = await getCategories();
+                console.log(data)
                 setCategories(data);
-                setCurrentCategory(data[0].name);
+                setCurrentCategory("All Notes");
 
                 if (reFetch) {
                     await handleGetNotes();
@@ -65,10 +79,12 @@ export default function HomeScreen() {
     useEffect(() => {
         (async () => {
             try {
-                await prepareDatabase();
-                setReady(true);
+                if (!ready) {
+                    await prepareDatabase();
+                    setReady(true);
+                }
             } catch (e) {
-                console.error('DB init error:', e);
+                console.error('DB init error => :', e);
             }
         })();
     }, [])
@@ -109,10 +125,23 @@ export default function HomeScreen() {
 
             <View>
                 <MyModal modal={addCategoryModal} setModal={setAddCategoryModal}>
-                    <View>
-                        <Text style={{ textAlign: "center" }}>Want to delete {currentCategory} category?</Text>
-                        <Text>Be carefull, all notes in this category will delete.</Text>
-                        <Text>Hello</Text>
+                    <View style={{ flexDirection: "column", rowGap: 8 }}>
+                        <View>
+                            <Text>Category Name:</Text>
+                            <TextInput
+                                style={styles.inputStyle}
+                                onChangeText={text => setNewCategoryName(text)}
+                                value={newCategoryName}
+                            >
+                            </TextInput>
+                        </View>
+                        <TouchableOpacity
+                            onPress={handleAddCategory}
+                        >
+                            <View style={{ width: "100%", backgroundColor: "#0077b6", padding: 4 }}>
+                                <Text style={{ textAlign: "center", color: "white" }}>Add</Text>
+                            </View>
+                        </TouchableOpacity>
                     </View>
                 </MyModal>
             </View>
@@ -144,7 +173,9 @@ export default function HomeScreen() {
                         </TouchableOpacity>)
                     }
 
-                    <TouchableOpacity>
+                    <TouchableOpacity
+                        onPress={() => setAddCategoryModal(true)}
+                    >
                         <ThemedView style={styles.navList}>
                             <ThemedText style={styles.navListText}>
                                 <AntDesign name="plus" size={24} color="#0077b6" />
@@ -246,5 +277,11 @@ const styles = StyleSheet.create({
     },
     navListText: {
         fontSize: 16
+    },
+    inputStyle: {
+        borderWidth: 1,
+        borderColor: "#0077b6",
+        borderRadius: 4,
+        marginTop: 1
     }
 });
