@@ -1,8 +1,9 @@
 import Container from '@/components/Container';
+import MyModal from '@/components/MyModal';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { getCategoryDataFromNoteTable } from '@/db/Database';
-import { getAllDataFromNoteTable } from '@/db/db';
+import { getAllDataFromNoteTable, getCategories } from '@/db/db';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import Entypo from '@expo/vector-icons/Entypo';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
@@ -24,8 +25,12 @@ export default function HomeScreen() {
     const [ready, setReady] = useState(false);
     const router = useRouter();
 
+    const [deleteCategoryModal, setDeleteCategoryModal] = useState(false);
+    const [addCategoryModal, setAddCategoryModal] = useState(false)
+
     const [notes, setNotes] = useState([]);
     const [categories, setCategories] = useState([]);
+    const [currentCategory, setCurrentCategory] = useState();
 
     const [reFetch, setReFetch] = useState(false);
     const [numColumns, setNumColumns] = useState(1);
@@ -41,14 +46,22 @@ export default function HomeScreen() {
     }
 
     useEffect(() => {
-        const run = async () => {
-            if (reFetch) {
-                await handleGetNotes()
-                setReFetch(false);
+        (async () => {
+            try {
+                const data = await getCategories();
+                setCategories(data);
+                setCurrentCategory(data[0].name);
+
+                if (reFetch) {
+                    await handleGetNotes();
+                    setReFetch(false);
+                }
+            } catch (error) {
+
             }
-        }
-        // run();
-    }, [reFetch]);
+        })();
+    }, [reFetch, ready]);
+
     useEffect(() => {
         (async () => {
             try {
@@ -82,6 +95,32 @@ export default function HomeScreen() {
 
     return (
         <Container>
+
+            {/* MODAL VIEW SECTION */}
+            <View>
+                <MyModal modal={deleteCategoryModal} setModal={setDeleteCategoryModal}>
+                    <View>
+                        <Text style={{ textAlign: "center" }}>Want to delete {currentCategory} category?</Text>
+                        <Text>Be carefull, all notes in this category will delete.</Text>
+                        <Text>Hello</Text>
+                    </View>
+                </MyModal>
+            </View>
+
+            <View>
+                <MyModal modal={addCategoryModal} setModal={setAddCategoryModal}>
+                    <View>
+                        <Text style={{ textAlign: "center" }}>Want to delete {currentCategory} category?</Text>
+                        <Text>Be carefull, all notes in this category will delete.</Text>
+                        <Text>Hello</Text>
+                    </View>
+                </MyModal>
+            </View>
+            {/* MODAL VIEW SECTION END */}
+
+
+
+
             <ThemedText style={{ fontSize: 30, fontWeight: 700 }}>
                 HelixNotes
             </ThemedText>
@@ -93,19 +132,14 @@ export default function HomeScreen() {
                     contentContainerStyle={{ gap: 8 }}
                     style={{ marginTop: 20 }}
                 >
-                    <TouchableOpacity onPress={() => setReFetch(true)}>
-                        <ThemedView style={styles.navList}>
-                            <ThemedText style={styles.navListText}>All Notes</ThemedText>
-                        </ThemedView>
-                    </TouchableOpacity>
-
                     {
-                        navTitles.map((nav: any, idx) => <TouchableOpacity
+                        categories.map((nav: any, idx) => <TouchableOpacity
                             key={idx}
-                            onPress={() => handleGetCategoryNotes(idx + 1)}
+                            // onPress={() => handleGetCategoryNotes(idx + 1)}
+                            onLongPress={() => setDeleteCategoryModal(true)}
                         >
                             <ThemedView style={styles.navList}>
-                                <ThemedText style={styles.navListText}>{nav}</ThemedText>
+                                <ThemedText style={[styles.navListText, currentCategory === nav.name && { color: "#0077b6" }]}>{nav.name}</ThemedText>
                             </ThemedView>
                         </TouchableOpacity>)
                     }
@@ -144,7 +178,7 @@ export default function HomeScreen() {
                     data={notes}
                     numColumns={numColumns}
                     ListEmptyComponent={<View>
-                        <ThemedText style={{ color: "gray", textAlign: "center", marginTop: 10 }}>No { } notes !</ThemedText>
+                        <ThemedText style={{ color: "gray", textAlign: "center", marginTop: 10 }}>No {currentCategory == "All Notes" ? "All" : currentCategory} notes !</ThemedText>
                     </View>}
                     key={numColumns}
                     keyExtractor={(item: TNote, index) => index.toString()}

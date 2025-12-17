@@ -19,6 +19,10 @@ export const initDB = async () => {
 // ============== END == THE MAIN DATABASE == END ================
 
 
+
+
+
+// ============== NOTES TABLE QUERIES ================
 export const getAllDataFromNoteTable = async () => {
     const db = await initDB();
     const data = await db.getAllAsync(`
@@ -29,3 +33,18 @@ export const getAllDataFromNoteTable = async () => {
         `);
     return data
 };
+// ============== END == NOTES TABLE QUERIES == END ================
+
+
+
+
+
+// ============== NOTES TABLE QUERIES ================
+export const getCategories = async () => {
+    const db = await initDB();
+    const data = await db.getAllAsync(`
+        SELECT * FROM category;
+        `);
+    return data
+};
+// ============== END == NOTES TABLE QUERIES == END ================
