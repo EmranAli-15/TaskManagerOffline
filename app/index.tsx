@@ -3,7 +3,7 @@ import MyModal from '@/components/MyModal';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { getCategoryDataFromNoteTable } from '@/db/Database';
-import { addNewCategory, getAllDataFromNoteTable, getCategories } from '@/db/db';
+import { addNewCategory, deleteCategory, getAllDataFromNoteTable, getCategories } from '@/db/db';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import Entypo from '@expo/vector-icons/Entypo';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
@@ -19,13 +19,13 @@ type TNote = {
     title: string;
 }
 
-const navTitles = ["Today", "Exams", "Tasks", "Projects", "Ideas"];
-
 export default function HomeScreen() {
     const [ready, setReady] = useState(false);
     const router = useRouter();
 
     const [deleteCategoryModal, setDeleteCategoryModal] = useState(false);
+    const [idForDeleteCategory, setIdForDeleteCategory] = useState<null | number>(null)
+
     const [addCategoryModal, setAddCategoryModal] = useState(false);
     const [newCategoryName, setNewCategoryName] = useState<any>("");
 
@@ -36,35 +36,62 @@ export default function HomeScreen() {
     const [reFetch, setReFetch] = useState(false);
     const [numColumns, setNumColumns] = useState(1);
 
+
+
+
+
+
+
+    // NOTES AND CATEGORY QUERY
     const handleGetNotes = async () => {
         const allNotes = await getAllDataFromNoteTable();
         setNotes(allNotes);
-    }
+    };
+
+    const handleGetCategory = async () => {
+        const data = await getCategories();
+        setCategories(data);
+        setCurrentCategory("All Notes");
+    };
+    // NOTES AND CATEGORY QUERY END
+
+
 
     const handleGetCategoryNotes = async (category: number) => {
         const allNotes = await getCategoryDataFromNoteTable(category);
         setNotes(allNotes);
     }
 
+
+
+
+    // CATEGORY MUTATION FUNCTIONS
     const handleAddCategory = async () => {
-        if (!newCategoryName) {
-            console.log("first")
-            return setAddCategoryModal(false)
-        }
+        if (!newCategoryName) return setAddCategoryModal(false);
         else {
-            console.log(newCategoryName)
             await addNewCategory({ name: newCategoryName });
+            setNewCategoryName("");
             setAddCategoryModal(false);
+            handleGetCategory()
         }
     }
+
+    const handleDeleteCategory = async () => {
+        if (idForDeleteCategory && idForDeleteCategory > 1) {
+            await deleteCategory(idForDeleteCategory);
+            handleGetCategory()
+        }
+        setDeleteCategoryModal(false);
+    }
+    // CATEGORY MUTATION FUNCTIONS END
+
+
+
 
     useEffect(() => {
         (async () => {
             try {
-                const data = await getCategories();
-                console.log(data)
-                setCategories(data);
-                setCurrentCategory("All Notes");
+                handleGetCategory();
 
                 if (reFetch) {
                     await handleGetNotes();
@@ -116,9 +143,16 @@ export default function HomeScreen() {
             <View>
                 <MyModal modal={deleteCategoryModal} setModal={setDeleteCategoryModal}>
                     <View>
-                        <Text style={{ textAlign: "center" }}>Want to delete {currentCategory} category?</Text>
+                        <Text style={{ textAlign: "center" }}>Want to delete category?</Text>
                         <Text>Be carefull, all notes in this category will delete.</Text>
-                        <Text>Hello</Text>
+
+                        <TouchableOpacity
+                            onPress={handleDeleteCategory}
+                        >
+                            <View style={{ width: "100%", backgroundColor: "#0077b6", padding: 4 }}>
+                                <Text style={{ textAlign: "center", color: "white" }}>Delete</Text>
+                            </View>
+                        </TouchableOpacity>
                     </View>
                 </MyModal>
             </View>
@@ -165,7 +199,10 @@ export default function HomeScreen() {
                         categories.map((nav: any, idx) => <TouchableOpacity
                             key={idx}
                             // onPress={() => handleGetCategoryNotes(idx + 1)}
-                            onLongPress={() => setDeleteCategoryModal(true)}
+                            onLongPress={() => {
+                                setIdForDeleteCategory(nav.id);
+                                setDeleteCategoryModal(true);
+                            }}
                         >
                             <ThemedView style={styles.navList}>
                                 <ThemedText style={[styles.navListText, currentCategory === nav.name && { color: "#0077b6" }]}>{nav.name}</ThemedText>

@@ -49,8 +49,16 @@ export const getCategories = async () => {
 };
 
 export const addNewCategory = async ({ name }) => {
-  console.log("From db.js => ", name)
   const db = await initDB();
+
+  const res = await db.getAllAsync(`
+    SELECT name FROM category
+      WHERE name = '${name}';
+    `
+  );
+
+  if (res.length !== 0) return;
+
   await db.runAsync(`
         INSERT INTO category (name)
         VALUES (?)
@@ -58,4 +66,13 @@ export const addNewCategory = async ({ name }) => {
     [name]
   );
 };
+
+export const deleteCategory = async (id) => {
+  const db = await initDB();
+  await db.runAsync(`
+        DELETE FROM category WHERE id = ?
+        `,
+    [id]
+  )
+}
 // ============== END == CATEGORY TABLE QUERIES == END ================
