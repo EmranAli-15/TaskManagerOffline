@@ -91,9 +91,9 @@ export default function HomeScreen() {
     useEffect(() => {
         (async () => {
             try {
-                handleGetCategory();
+                if (ready) handleGetCategory();
 
-                if (reFetch) {
+                if (reFetch && ready) {
                     await handleGetNotes();
                     setReFetch(false);
                 }

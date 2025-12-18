@@ -28,11 +28,23 @@ export const getAllDataFromNoteTable = async () => {
   const data = await db.getAllAsync(`
         SELECT note.id, color.head, color.body, title
         FROM note JOIN color
-        ON note.color = color.id
+        ON note.color_id = color.id
         ORDER BY note.id DESC;
         `);
   return data
 };
+
+
+export const getNotesByCategory = async (category_id) => {
+  const db = await initDB();
+  const data = await db.getAllAsync(`
+    SELECT note.id, color.head, color.body, title
+      FROM note JOIN color ON note.color_id = color.id 
+      WHERE category_id=${category_id} 
+      ORDER BY note.id DESC
+    `);
+  return data;
+}
 // ============== END == NOTES TABLE QUERIES == END ================
 
 
