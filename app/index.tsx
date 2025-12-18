@@ -2,10 +2,10 @@ import Container from '@/components/Container';
 import MyModal from '@/components/MyModal';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
-import { getCategoryDataFromNoteTable } from '@/db/Database';
-import { addNewCategory, deleteCategory, getAllDataFromNoteTable, getCategories } from '@/db/db';
+import { addNewCategory, deleteCategory, getCategories, getNotesByCategory } from '@/db/db';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import Entypo from '@expo/vector-icons/Entypo';
+import Foundation from '@expo/vector-icons/Foundation';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { Link, useRouter } from 'expo-router';
 import React, { useCallback, useEffect, useState } from 'react';
@@ -43,24 +43,20 @@ export default function HomeScreen() {
 
 
     // NOTES AND CATEGORY QUERY
-    const handleGetNotes = async () => {
-        const allNotes = await getAllDataFromNoteTable();
+    const handleGetNotes = async ({ id, title }: { id: number, title: string }) => {
+        const allNotes = await getNotesByCategory(id);
         setNotes(allNotes);
+        setCurrentCategory(title);
     };
 
     const handleGetCategory = async () => {
         const data = await getCategories();
         setCategories(data);
-        setCurrentCategory("All Notes");
     };
     // NOTES AND CATEGORY QUERY END
 
 
 
-    const handleGetCategoryNotes = async (category: number) => {
-        const allNotes = await getCategoryDataFromNoteTable(category);
-        setNotes(allNotes);
-    }
 
 
 
@@ -93,8 +89,8 @@ export default function HomeScreen() {
             try {
                 if (ready) handleGetCategory();
 
-                if (reFetch && ready) {
-                    await handleGetNotes();
+                if (reFetch || ready) {
+                    await handleGetNotes({ id: 1, title: "All Notes" });
                     setReFetch(false);
                 }
             } catch (error) {
@@ -120,7 +116,7 @@ export default function HomeScreen() {
     const [refreshing, setRefreshing] = useState(false);
     const onRefresh = useCallback(() => {
         setRefreshing(true);
-        handleGetNotes()
+        handleGetNotes({ id: 1, title: "All Notes" })
 
         setTimeout(() => {
             setRefreshing(false);
@@ -136,21 +132,46 @@ export default function HomeScreen() {
         );
     }
 
+
+    console.log(notes)
+    console.log(categories)
+
     return (
         <Container>
 
             {/* MODAL VIEW SECTION */}
             <View>
                 <MyModal modal={deleteCategoryModal} setModal={setDeleteCategoryModal}>
-                    <View>
-                        <Text style={{ textAlign: "center" }}>Want to delete category?</Text>
-                        <Text>Be carefull, all notes in this category will delete.</Text>
+                    <View style={{ flexDirection: "column", rowGap: 8 }}>
+                        <View style={{ alignItems: "center" }}>
+                            <View style={{
+                                padding: 5,
+                                backgroundColor: "#fff4e5",
+                                height: 45,
+                                width: 45,
+                                borderRadius: "50%",
+                                alignItems: "center",
+                                justifyContent: "center"
+                            }}
+                            >
+                                <Foundation name="alert" size={30} color="#ed6c02" />
+                            </View>
+                        </View>
+                        <Text style={{ textAlign: "center", fontWeight: "400", fontSize: 18 }}>Delete this category?</Text>
+                        <Text style={{ color: "gray", textAlign: "center" }}>This action cannot be undone. All notes associated with this category will be lost.</Text>
 
                         <TouchableOpacity
                             onPress={handleDeleteCategory}
                         >
                             <View style={{ width: "100%", backgroundColor: "#0077b6", padding: 4 }}>
                                 <Text style={{ textAlign: "center", color: "white" }}>Delete</Text>
+                            </View>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            onPress={() => setDeleteCategoryModal(false)}
+                        >
+                            <View style={{ width: "100%", borderWidth: 1, borderColor: "#0077b6", padding: 4 }}>
+                                <Text style={{ textAlign: "center" }}>Cancle</Text>
                             </View>
                         </TouchableOpacity>
                     </View>
@@ -198,7 +219,7 @@ export default function HomeScreen() {
                     {
                         categories.map((nav: any, idx) => <TouchableOpacity
                             key={idx}
-                            // onPress={() => handleGetCategoryNotes(idx + 1)}
+                            onPress={() => handleGetNotes({ id: nav.id, title: nav.name })}
                             onLongPress={() => {
                                 setIdForDeleteCategory(nav.id);
                                 setDeleteCategoryModal(true);

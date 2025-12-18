@@ -23,26 +23,37 @@ export const initDB = async () => {
 
 
 // ============== NOTES TABLE QUERIES ================
-export const getAllDataFromNoteTable = async () => {
+export const createNote = async ({ title, details, category, color }) => {
+  await db.runAsync(`
+        INSERT INTO note (title, details, category_id, color_id)
+        VALUES (?, ?, ?, ?)
+     `,
+    [title, details, category, color]
+  );
+};
+
+export const getNotesByCategory = async (category_id) => {
   const db = await initDB();
-  const data = await db.getAllAsync(`
+
+  let data;
+
+  if (category_id == 1) {
+    data = await db.getAllAsync(`
         SELECT note.id, color.head, color.body, title
         FROM note JOIN color
         ON note.color_id = color.id
         ORDER BY note.id DESC;
         `);
-  return data
-};
+  } else {
+    data = await db.getAllAsync(`
+      SELECT note.id, color.head, color.body, title
+        FROM note JOIN color
+        ON note.color_id = color.id 
+        WHERE category_id=${category_id} 
+        ORDER BY note.id DESC
+      `);
+  }
 
-
-export const getNotesByCategory = async (category_id) => {
-  const db = await initDB();
-  const data = await db.getAllAsync(`
-    SELECT note.id, color.head, color.body, title
-      FROM note JOIN color ON note.color_id = color.id 
-      WHERE category_id=${category_id} 
-      ORDER BY note.id DESC
-    `);
   return data;
 }
 // ============== END == NOTES TABLE QUERIES == END ================
@@ -88,3 +99,18 @@ export const deleteCategory = async (id) => {
   )
 }
 // ============== END == CATEGORY TABLE QUERIES == END ================
+
+
+
+
+
+
+
+
+// ============== COLOR TABLE QUERIES  ================
+export const getColors = async () => {
+  const db = await initDB();
+  const data = await db.getAllAsync(`SELECT * FROM color;`);
+  return data;
+};
+// ============== END == COLOR TABLE QUERIES == END ================

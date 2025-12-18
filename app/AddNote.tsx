@@ -1,9 +1,10 @@
-import { getDataFromCategoryTable, getDataFromColorTable, insertDataIntoNoteTable } from "@/db/Database";
+// import { getDataFromCategoryTable, getDataFromColorTable, insertDataIntoNoteTable } from "@/db/Database";
 import Ionicons from '@expo/vector-icons/Ionicons';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 
 import Container from '@/components/Container';
 import { ThemedText } from "@/components/themed-text";
+import { createNote, getCategories, getColors } from '@/db/db';
 import { useRouter } from "expo-router";
 import React, { useEffect, useRef, useState } from 'react';
 import {
@@ -55,7 +56,7 @@ export default function AddNote() {
       color: noteColor + 1
     }
     if (details || title) {
-      await insertDataIntoNoteTable(data);
+      await createNote(data);
       setTitle("");
       setDetails("");
       router.navigate("/");
@@ -85,8 +86,8 @@ export default function AddNote() {
 
   useEffect(() => {
     const run = async () => {
-      const colors = await getDataFromColorTable();
-      const categories = await getDataFromCategoryTable();
+      const colors = await getColors();
+      const categories = await getCategories();
       setCategories(categories);
       setNoteColorPallate(colors);
     }
