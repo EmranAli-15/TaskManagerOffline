@@ -3,6 +3,7 @@ import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import 'react-native-reanimated';
 
+import { Provider } from '@/contextProvider/ContextProvider';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 // import { StatusBar } from 'react-native';
 
@@ -15,10 +16,12 @@ export default function RootLayout() {
 
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack
-        screenOptions={{ headerShown: false, animation: "slide_from_right" }}
-      >
-      </Stack>
+      <Provider>
+        <Stack
+          screenOptions={{ headerShown: false, animation: "slide_from_right" }}
+        >
+        </Stack>
+      </Provider>
       {/* <StatusBar barStyle={'default'}></StatusBar> */}
       <StatusBar style={'auto'}></StatusBar>
     </ThemeProvider>

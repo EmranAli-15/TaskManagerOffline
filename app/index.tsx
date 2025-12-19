@@ -2,6 +2,7 @@ import Container from '@/components/Container';
 import MyModal from '@/components/MyModal';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
+import { useSeed } from '@/contextProvider/ContextProvider';
 import { addNewCategory, deleteCategory, getCategories, getNotesByCategory } from '@/db/db';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import Entypo from '@expo/vector-icons/Entypo';
@@ -10,7 +11,6 @@ import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { Link, useRouter } from 'expo-router';
 import React, { useCallback, useEffect, useState } from 'react';
 import { ActivityIndicator, FlatList, RefreshControl, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
-import { prepareDatabase } from '../db/init';
 
 type TNote = {
     id: number,
@@ -20,8 +20,8 @@ type TNote = {
 }
 
 export default function HomeScreen() {
-    const [ready, setReady] = useState(false);
     const router = useRouter();
+    const { isSeeded } = useSeed();
 
     const [deleteCategoryModal, setDeleteCategoryModal] = useState(false);
     const [idForDeleteCategory, setIdForDeleteCategory] = useState<null | number>(null)
@@ -82,35 +82,18 @@ export default function HomeScreen() {
     // CATEGORY MUTATION FUNCTIONS END
 
 
-
-
-    useEffect(() => {
-        (async () => {
-            try {
-                if (ready) handleGetCategory();
-
-                if (reFetch || ready) {
-                    await handleGetNotes({ id: 1, title: "All Notes" });
-                    setReFetch(false);
-                }
-            } catch (error) {
-
-            }
-        })();
-    }, [reFetch, ready]);
+    // console.log(isSeeded);
 
     useEffect(() => {
-        (async () => {
-            try {
-                if (!ready) {
-                    await prepareDatabase();
-                    setReady(true);
-                }
-            } catch (e) {
-                console.error('DB init error => :', e);
-            }
-        })();
-    }, [])
+        const fn = async () => {
+            handleGetCategory();
+            await handleGetNotes({ id: 1, title: "All Notes" });
+            setReFetch(false);
+        }
+        if (isSeeded || reFetch) {
+            fn();
+        }
+    }, [isSeeded, reFetch]);
 
 
     const [refreshing, setRefreshing] = useState(false);
@@ -124,19 +107,20 @@ export default function HomeScreen() {
     }, []);
 
 
-    if (!ready) {
+
+
+
+
+
+
+    if (!isSeeded) {
         return (
             <View style={{ flex: 1, justifyContent: 'center' }}>
                 <ActivityIndicator size="large" />
             </View>
         );
     }
-
-
-    console.log(notes)
-    console.log(categories)
-
-    return (
+    else return (
         <Container>
 
             {/* MODAL VIEW SECTION */}
