@@ -40,7 +40,7 @@ export default function EditNote() {
     const router = useRouter();
 
     const [showOps, setShowOps] = useState(false);
-    const [readMode, setReadMode] = useState(false);
+    const [readMode, setReadMode] = useState(true);
     const [openModal, setOpenModal] = useState(false);
     const [savedIndecator, setSavedIndicator] = useState(false);
 
