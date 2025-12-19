@@ -31,7 +31,9 @@ export default function HomeScreen() {
 
     const [notes, setNotes] = useState([]);
     const [categories, setCategories] = useState([]);
+
     const [currentCategory, setCurrentCategory] = useState("");
+    const [wantTodeleteCategoryName, setWantTodeleteCategoryName] = useState("");
 
     const [reFetch, setReFetch] = useState(false);
     const [numColumns, setNumColumns] = useState(1);
@@ -142,7 +144,7 @@ export default function HomeScreen() {
                                 <Foundation name="alert" size={30} color="#ed6c02" />
                             </View>
                         </View>
-                        <Text style={{ textAlign: "center", fontWeight: "400", fontSize: 18 }}>Delete this category?</Text>
+                        <Text style={{ textAlign: "center", fontWeight: "400", fontSize: 18 }}>Delete <Text style={{ color: "red", fontWeight: "600" }}>{wantTodeleteCategoryName}</Text> category?</Text>
                         <Text style={{ color: "gray", textAlign: "center" }}>This action cannot be undone. All notes associated with this category will be lost.</Text>
 
                         <TouchableOpacity
@@ -206,12 +208,14 @@ export default function HomeScreen() {
                             key={idx}
                             onPress={() => handleGetNotes({ id: nav.id, title: nav.name })}
                             onLongPress={() => {
+                                setWantTodeleteCategoryName(nav.name)
                                 setIdForDeleteCategory(nav.id);
-                                setDeleteCategoryModal(true);
+                                if (nav.id !== 1)
+                                    setDeleteCategoryModal(true);
                             }}
                         >
-                            <ThemedView style={styles.navList}>
-                                <ThemedText style={[styles.navListText, currentCategory === nav.name && { color: "#0077b6" }]}>{nav.name}</ThemedText>
+                            <ThemedView style={[styles.navList, currentCategory === nav.name && { backgroundColor: "#0077b6" }]}>
+                                <ThemedText style={[styles.navListText, currentCategory === nav.name && { color: "#fff" }]}>{nav.name}</ThemedText>
                             </ThemedView>
                         </TouchableOpacity>)
                     }
