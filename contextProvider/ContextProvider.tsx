@@ -6,7 +6,6 @@ const MyContext = createContext<null | any>(null);
 export const Provider = ({ children }: { children: ReactNode }) => {
     const [isSeeded, setIsSeeded] = useState(false);
 
-
     useEffect(() => {
         (async () => {
             try {

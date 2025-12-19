@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "Notes",
+    "name": "HelixNotes",
     "assetBundlePatterns": [
       "./assets/database/*"
     ],

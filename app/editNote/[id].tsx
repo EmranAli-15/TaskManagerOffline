@@ -1,4 +1,3 @@
-import { deleteNoteFromNoteTable, getDataFromCategoryTable, getDataFromColorTable, getSingleNoteFromNoteTable, updateANoteIntoNoteTable } from "@/db/Database";
 import AntDesign from '@expo/vector-icons/AntDesign';
 import Entypo from '@expo/vector-icons/Entypo';
 import Ionicons from '@expo/vector-icons/Ionicons';
@@ -6,8 +5,9 @@ import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import SimpleLineIcons from '@expo/vector-icons/SimpleLineIcons';
 
 import Container from '@/components/Container';
+import MyModal from '@/components/MyModal';
 import { ThemedText } from "@/components/themed-text";
-import { ThemedView } from "@/components/themed-view";
+import { deleteNote, getCategories, getColors, getSingleNote, updateNote } from "@/db/db";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useRef, useState } from 'react';
 import {
@@ -24,7 +24,7 @@ import {
 
 type TNoteColorPallate = { id: number, head: string, body: string };
 
-export default function AddNote() {
+export default function EditNote() {
     let color = "white";
     let colorBg = "#fff"
     const colorScheme = useColorScheme();
@@ -47,7 +47,6 @@ export default function AddNote() {
 
     const { id } = useLocalSearchParams();
 
-
     const [title, setTitle] = useState("");
     const [details, setDetails] = useState("");
     const [categoryId, setCategoryId] = useState(1);
@@ -63,12 +62,12 @@ export default function AddNote() {
         const data = {
             title: title,
             details: details,
-            color: noteColor + 1,
-            category: categoryId,
+            color_id: noteColor + 1,
+            category_id: categoryId,
             id: id
         }
         if (details || title) {
-            await updateANoteIntoNoteTable(data);
+            await updateNote(data);
             setSavedIndicator(true);
             setTimeout(() => {
                 setSavedIndicator(false);
@@ -77,7 +76,7 @@ export default function AddNote() {
     };
 
     const handleDeleteNote = async () => {
-        await deleteNoteFromNoteTable(id);
+        await deleteNote(id);
         router.navigate("/");
     }
 
@@ -104,15 +103,15 @@ export default function AddNote() {
 
     useEffect(() => {
         const run = async () => {
-            const colors = await getDataFromColorTable();
-            const categories = await getDataFromCategoryTable();
+            const colors = await getColors();
+            const categories = await getCategories();
             setCategories(categories);
             setNoteColorPallate(colors);
-            const note = await getSingleNoteFromNoteTable(id);
-            setTitle(note.title);
-            setDetails(note.details);
-            setNoteColor((note.colorId) - 1)
-            setCategoryId(note.categoryId)
+            const note = await getSingleNote(id);
+            setTitle(note?.title);
+            setDetails(note?.details);
+            setNoteColor((note?.colorId) - 1)
+            setCategoryId(note?.categoryId)
         }
 
         run();
@@ -128,28 +127,35 @@ export default function AddNote() {
 
                         <>
                             {
-                                openModal && <ThemedView style={{ position: "absolute", top: 35, right: 0, zIndex: 10, padding: 10, paddingHorizontal: 50, borderRadius: 5, }}>
-                                    <View style={{ flex: 1, alignItems: "center", borderBottomWidth: 1 }}>
-                                        <TouchableOpacity onPress={handleDeleteNote}>
-                                            <AntDesign name="delete" size={24} color="red" />
-                                        </TouchableOpacity>
-                                    </View>
-                                    <View style={{ flex: 1, alignItems: "center", marginTop: 20 }}>
+                                openModal && <MyModal modal={openModal} setModal={setOpenModal}>
+
+
+                                    <View style={{ alignItems: "center" }}>
                                         <TouchableOpacity
                                             onPress={() => setReadMode(!readMode)}>
                                             {
-                                                readMode ? <View style={{ flex: 1, alignItems: "center" }}>
+                                                readMode ? <View style={{ alignItems: "center" }}>
                                                     <Entypo name="eye" size={24} color="#0077b6" />
-                                                    <ThemedText>Reading Mode</ThemedText>
+                                                    <Text>Reading Mode</Text>
                                                 </View> :
-                                                    <View style={{ flex: 1, alignItems: "center" }}>
+                                                    <View style={{ alignItems: "center" }}>
                                                         <Entypo name="edit" size={24} color="#0077b6" />
-                                                        <ThemedText>Edit Mode</ThemedText>
+                                                        <Text>Edit Mode</Text>
                                                     </View>
                                             }
                                         </TouchableOpacity>
                                     </View>
-                                </ThemedView>
+
+                                    <View style={{ width: "100%", height: 2, backgroundColor: "gray", marginVertical: 20 }}></View>
+
+                                    <View style={{ alignItems: "center" }}>
+                                        <TouchableOpacity onPress={handleDeleteNote}>
+                                            <AntDesign name="delete" size={24} color="red" />
+                                        </TouchableOpacity>
+                                        <Text>Delete</Text>
+                                    </View>
+
+                                </MyModal>
                             }
                         </>
 

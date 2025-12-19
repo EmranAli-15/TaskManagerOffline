@@ -68,21 +68,22 @@ export default function HomeScreen() {
             await addNewCategory({ name: newCategoryName });
             setNewCategoryName("");
             setAddCategoryModal(false);
-            handleGetCategory()
+            handleGetCategory();
         }
     }
 
     const handleDeleteCategory = async () => {
         if (idForDeleteCategory && idForDeleteCategory > 1) {
             await deleteCategory(idForDeleteCategory);
-            handleGetCategory()
+            await handleGetNotes({ id: 1, title: "All Notes" });
+            handleGetCategory();
         }
         setDeleteCategoryModal(false);
     }
     // CATEGORY MUTATION FUNCTIONS END
 
 
-    // console.log(isSeeded);
+
 
     useEffect(() => {
         const fn = async () => {
@@ -251,7 +252,7 @@ export default function HomeScreen() {
                     data={notes}
                     numColumns={numColumns}
                     ListEmptyComponent={<View>
-                        <ThemedText style={{ color: "gray", textAlign: "center", marginTop: 10 }}>No {currentCategory == "All Notes" ? "All" : currentCategory} notes !</ThemedText>
+                        <ThemedText style={{ color: "gray", textAlign: "center", marginTop: 10 }}>{currentCategory == "All Notes" ? "You have no notes yet!" : `${currentCategory} \nis empty.`}</ThemedText>
                     </View>}
                     key={numColumns}
                     keyExtractor={(item: TNote, index) => index.toString()}

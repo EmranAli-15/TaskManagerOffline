@@ -55,7 +55,43 @@ export const getNotesByCategory = async (category_id) => {
   }
 
   return data;
-}
+};
+
+
+export const getSingleNote = async (id) => {
+  const db = await initDB();
+  const data = await db.getFirstAsync(`
+        SELECT note.id AS noteId, title, details, category.id As categoryId, color.id AS colorId FROM note
+        INNER JOIN category
+        ON note.category_id = category.id
+        INNER JOIN color
+        ON note.color_id = color.id
+        WHERE note.id=${id}
+        `);
+  return data;
+};
+
+
+export const updateNote = async ({ title, details, color_id, category_id, id }) => {
+    const db = await initDB();
+    await db.runAsync(`
+        UPDATE note
+        SET title=?, details=?, color_id=?, category_id=?
+        WHERE id=?
+        `,
+        [title, details, color_id, category_id, id]
+    )
+};
+
+
+export const deleteNote = async (id) => {
+    const db = await initDB();
+    await db.runAsync(`
+        DELETE FROM note WHERE id=?
+        `,
+        [id]
+    )
+};
 // ============== END == NOTES TABLE QUERIES == END ================
 
 
