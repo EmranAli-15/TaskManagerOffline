@@ -8,9 +8,9 @@ import AntDesign from '@expo/vector-icons/AntDesign';
 import Entypo from '@expo/vector-icons/Entypo';
 import Foundation from '@expo/vector-icons/Foundation';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
-import { Link, useRouter } from 'expo-router';
+import { useRouter } from 'expo-router';
 import React, { useCallback, useEffect, useState } from 'react';
-import { ActivityIndicator, FlatList, RefreshControl, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, FlatList, Pressable, RefreshControl, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
 type TNote = {
     id: number,
@@ -18,6 +18,7 @@ type TNote = {
     body: string;
     title: string;
     details: string;
+    isChecked: boolean
 }
 
 export default function HomeScreen() {
@@ -25,12 +26,17 @@ export default function HomeScreen() {
     const { isSeeded } = useSeed();
 
     const [deleteCategoryModal, setDeleteCategoryModal] = useState(false);
-    const [idForDeleteCategory, setIdForDeleteCategory] = useState<null | number>(null)
+    const [idForDeleteCategory, setIdForDeleteCategory] = useState<null | number>(null);
+
+
+    const [selection, setSelection] = useState(false);
+
+
 
     const [addCategoryModal, setAddCategoryModal] = useState(false);
     const [newCategoryName, setNewCategoryName] = useState<any>("");
 
-    const [notes, setNotes] = useState([]);
+    const [notes, setNotes] = useState<any>([]);
     const [categories, setCategories] = useState([]);
 
     const [currentCategory, setCurrentCategory] = useState("");
@@ -48,7 +54,11 @@ export default function HomeScreen() {
     // NOTES AND CATEGORY QUERY
     const handleGetNotes = async ({ id, title }: { id: number, title: string }) => {
         const allNotes = await getNotesByCategory(id);
-        setNotes(allNotes);
+        const mutedNotes = allNotes.map((note: any) => ({
+            ...note,
+            isChecked: false
+        }));
+        setNotes(mutedNotes);
         setCurrentCategory(title);
     };
 
@@ -87,6 +97,28 @@ export default function HomeScreen() {
 
 
 
+    // Delete note
+    const handleDeleteNote = (id: number) => {
+
+    }
+    const handleSelectNote = (id: number) => {
+        if (!selection) setSelection(true);
+        const updatedNotes = notes.map((note: TNote) => {
+            if (note.id === id) return { ...note, isChecked: !note.isChecked }
+            else return note
+        });
+        setNotes(updatedNotes)
+    }
+    const handleCancleSelection = () => {
+        const mutedNotes = notes.map((note: any) => ({
+            ...note,
+            isChecked: false
+        }));
+        setNotes(mutedNotes);
+        setSelection(false);
+    }
+
+
 
     useEffect(() => {
         const fn = async () => {
@@ -109,11 +141,6 @@ export default function HomeScreen() {
             setRefreshing(false);
         }, 500);
     }, []);
-
-
-
-
-
 
 
 
@@ -207,7 +234,10 @@ export default function HomeScreen() {
                     {
                         categories.map((nav: any, idx) => <TouchableOpacity
                             key={idx}
-                            onPress={() => handleGetNotes({ id: nav.id, title: nav.name })}
+                            onPress={() => {
+                                handleCancleSelection()
+                                handleGetNotes({ id: nav.id, title: nav.name })
+                            }}
                             onLongPress={() => {
                                 setWantTodeleteCategoryName(nav.name)
                                 setIdForDeleteCategory(nav.id);
@@ -234,6 +264,13 @@ export default function HomeScreen() {
             </View>
 
             <View style={styles.viewButton}>
+                <View>
+                    {
+                        selection && <View>
+                            <Pressable onPress={() => handleCancleSelection()}><ThemedText>Cancle</ThemedText></Pressable>
+                        </View>
+                    }
+                </View>
                 <TouchableOpacity onPress={() => setNumColumns(numColumns === 1 ? 2 : 1)}>
                     <View>
                         {
@@ -264,26 +301,42 @@ export default function HomeScreen() {
                     renderItem={({ item }) => (
 
 
-                        <Link
-                            onLongPress={() => alert("hello")}
-                            style={{ width: numColumns == 2 ? "50%" : "auto", marginTop: 5, flex: 1, paddingHorizontal: 3 }}
-                            href={{
-                                pathname: '/editNote/[id]',
-                                params: { id: item.id },
-                            }}>
-                            <View style={[styles.box]}>
+                        <Pressable
+                            onLongPress={() => handleSelectNote(item.id)}
+                            style={{
+                                width: numColumns == 2 ? "50%" : "auto",
+                                marginTop: 5,
+                                flex: 1,
+                                paddingHorizontal: 3
+                            }}
+                            onPress={() => {
+                                if (selection) {
+                                    handleSelectNote(item.id)
+                                } else {
+                                    router.push({
+                                        pathname: '/editNote/[id]',
+                                        params: { id: item.id },
+                                    });
+                                }
+                            }}
+                        >
 
-                                <View style={{ height: 40, backgroundColor: item.head, flex: 1, justifyContent: "center" }}>
-                                    <Text style={{ paddingHorizontal: 10, fontSize: 16, fontWeight: "400", overflow: "hidden" }}>{item.title.length > 30 ? <Text>{item.title.slice(0, 30)}...</Text> : item.title}</Text>
+                            <View style={[styles.box]}>
+                                <View style={{ height: 40, backgroundColor: item.head }}>
+                                    <View style={{ height: "100%", flex: 1, justifyContent: "center", backgroundColor: item.isChecked ? "#00000085" : "" }}>
+                                        <Text style={{ paddingHorizontal: 10, fontSize: 16, fontWeight: "400", overflow: "hidden", color: "black" }}>{item.title.length > 30 ? <Text>{item.title.slice(0, 30)}...</Text> : item.title}</Text>
+                                    </View>
                                 </View>
                                 <View style={{ height: 90, backgroundColor: item.body }}>
-                                    <Text style={styles.item}>
-                                        {item.details.length > 110 ? <Text>{item.details.slice(0, 110)}...</Text> : item.details}
-                                    </Text>
+                                    <View style={{ height: "100%", backgroundColor: item.isChecked ? "#00000085" : "" }}>
+                                        <Text style={styles.item}>
+                                            {item.details.length > 110 ? <Text>{item.details.slice(0, 110)}...</Text> : item.details}
+                                        </Text>
+                                    </View>
                                 </View>
-
                             </View>
-                        </Link>
+
+                        </Pressable>
                     )}
                     refreshControl={
                         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
@@ -320,7 +373,8 @@ const styles = StyleSheet.create({
     },
     viewButton: {
         flexDirection: "row",
-        justifyContent: "flex-end"
+        alignItems: "center",
+        justifyContent: "space-between"
     },
     navList: {
         paddingVertical: 4,
