@@ -17,6 +17,7 @@ type TNote = {
     head: string,
     body: string;
     title: string;
+    details: string;
 }
 
 export default function HomeScreen() {
@@ -264,6 +265,7 @@ export default function HomeScreen() {
 
 
                         <Link
+                            onLongPress={() => alert("hello")}
                             style={{ width: numColumns == 2 ? "50%" : "auto", marginTop: 5, flex: 1, paddingHorizontal: 3 }}
                             href={{
                                 pathname: '/editNote/[id]',
@@ -271,10 +273,12 @@ export default function HomeScreen() {
                             }}>
                             <View style={[styles.box]}>
 
-                                <View style={{ height: 10, backgroundColor: item.head }}></View>
+                                <View style={{ height: 40, backgroundColor: item.head, flex: 1, justifyContent: "center" }}>
+                                    <Text style={{ paddingHorizontal: 10, fontSize: 16, fontWeight: "400", overflow: "hidden" }}>{item.title.length > 30 ? <Text>{item.title.slice(0, 30)}...</Text> : item.title}</Text>
+                                </View>
                                 <View style={{ height: 90, backgroundColor: item.body }}>
                                     <Text style={styles.item}>
-                                        {item.title.length > 30 ? <Text>{item.title.slice(0, 30)}...</Text> : item.title}
+                                        {item.details.length > 110 ? <Text>{item.details.slice(0, 110)}...</Text> : item.details}
                                     </Text>
                                 </View>
 
@@ -295,8 +299,9 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
     item: {
         margin: 10,
-        fontSize: 19,
-        color: "black",
+        fontSize: 14,
+        color: "gray",
+        overflow: "hidden"
     },
     box: {
         borderRadius: 10,
@@ -323,7 +328,7 @@ const styles = StyleSheet.create({
         borderRadius: 50,
     },
     navListText: {
-        fontSize: 16
+        fontSize: 14
     },
     inputStyle: {
         borderWidth: 1,

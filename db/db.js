@@ -39,14 +39,14 @@ export const getNotesByCategory = async (category_id) => {
 
   if (category_id == 1) {
     data = await db.getAllAsync(`
-        SELECT note.id, color.head, color.body, title
+        SELECT note.id, color.head, color.body, title, details
         FROM note JOIN color
         ON note.color_id = color.id
         ORDER BY note.id DESC;
         `);
   } else {
     data = await db.getAllAsync(`
-      SELECT note.id, color.head, color.body, title
+      SELECT note.id, color.head, color.body, title, details
         FROM note JOIN color
         ON note.color_id = color.id 
         WHERE category_id=${category_id} 
