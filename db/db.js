@@ -92,6 +92,16 @@ export const deleteNote = async (id) => {
     [id]
   )
 };
+
+
+export const deleteMultipleNote = async (ids) => {
+  const db = await initDB();
+  await db.runAsync(`
+        DELETE FROM note WHERE id in(${ids.join(",")})
+        `,
+    [ids]
+  )
+};
 // ============== END == NOTES TABLE QUERIES == END ================
 
 

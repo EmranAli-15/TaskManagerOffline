@@ -3,7 +3,7 @@ import MyModal from '@/components/MyModal';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { useSeed } from '@/contextProvider/ContextProvider';
-import { addNewCategory, deleteCategory, getCategories, getNotesByCategory } from '@/db/db';
+import { addNewCategory, deleteCategory, deleteMultipleNote, getCategories, getNotesByCategory } from '@/db/db';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import Entypo from '@expo/vector-icons/Entypo';
 import Foundation from '@expo/vector-icons/Foundation';
@@ -98,8 +98,11 @@ export default function HomeScreen() {
 
 
     // Delete note
-    const handleDeleteNote = (id: number) => {
-
+    const handleDeleteMultipleNote = async () => {
+        const ids = notes.filter((note: TNote) => note.isChecked == true).map((note: TNote) => note.id);
+        await deleteMultipleNote(ids);
+        handleGetNotes({ id: 1, title: "All" });
+        setSelection(false);
     }
     const handleSelectNote = (id: number) => {
         if (!selection) setSelection(true);
@@ -108,7 +111,7 @@ export default function HomeScreen() {
             else return note
         });
         setNotes(updatedNotes)
-    }
+    };
     const handleCancleSelection = () => {
         const mutedNotes = notes.map((note: any) => ({
             ...note,
@@ -116,7 +119,7 @@ export default function HomeScreen() {
         }));
         setNotes(mutedNotes);
         setSelection(false);
-    }
+    };
 
 
 
@@ -135,7 +138,7 @@ export default function HomeScreen() {
     const [refreshing, setRefreshing] = useState(false);
     const onRefresh = useCallback(() => {
         setRefreshing(true);
-        handleGetNotes({ id: 1, title: "All Notes" })
+        handleGetNotes({ id: 1, title: "All" })
 
         setTimeout(() => {
             setRefreshing(false);
@@ -266,8 +269,9 @@ export default function HomeScreen() {
             <View style={styles.viewButton}>
                 <View>
                     {
-                        selection && <View>
+                        selection && <View style={{ flexDirection: "row", columnGap: 10 }}>
                             <Pressable onPress={() => handleCancleSelection()}><ThemedText>Cancle</ThemedText></Pressable>
+                            <Pressable onPress={() => handleDeleteMultipleNote()}><ThemedText>Delete</ThemedText></Pressable>
                         </View>
                     }
                 </View>

@@ -162,7 +162,9 @@ export default function AddNote() {
                     keyExtractor={(item: any, index) => index.toString()}
                     renderItem={({ item }) => (
                       <TouchableOpacity onPress={() => setNoteColor(item.id - 1)}>
-                        <View style={[styles.colorStyle, { backgroundColor: item.head, marginHorizontal: 10, flex: 1 }]}></View>
+                        <View style={[styles.colorStyle, { backgroundColor: item.head, marginHorizontal: 10, flex: 1, alignItems: "center", justifyContent: "center", padding: 4 }]}>
+                          <View style={[{ height: 38, width: 38, borderRadius: "50%", backgroundColor: item.id == noteColor+1 ? item.head : item.body }]}></View>
+                        </View>
                       </TouchableOpacity>
                     )}
                     contentContainerStyle={{ marginBottom: 10 }}
@@ -175,7 +177,9 @@ export default function AddNote() {
                     renderItem={({ item }) => (
                       <TouchableOpacity onPress={() => setCategoryId(item.id)}>
                         <View style={{ flex: 1, marginHorizontal: 8, width: "100%" }}>
-                          <ThemedText style={{ fontSize: 20, fontWeight: 600, textTransform: "capitalize", color: item?.id == categoryId ? "#0077b6" : color }}>{item?.name}</ThemedText>
+                          <View style={{ backgroundColor: item?.id == categoryId ? "#0077b6" : colorBg, padding: 2, borderRadius: 16 }}>
+                            <ThemedText style={{ fontSize: 16, textAlign: "center", color: item?.id == categoryId ? "#fff" : color }}>{item?.name}</ThemedText>
+                          </View>
                         </View>
                       </TouchableOpacity>
                     )}

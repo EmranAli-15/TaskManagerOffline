@@ -241,7 +241,7 @@ export default function EditNote() {
                                         renderItem={({ item }) => (
                                             <TouchableOpacity onPress={() => setNoteColor(item.id - 1)}>
                                                 <View style={[styles.colorStyle, { backgroundColor: item.head, marginHorizontal: 10, flex: 1, alignItems: "center", justifyContent: "center", padding: 4 }]}>
-                                                    <View style={[{ height: 38, width: 38, borderRadius: "50%", backgroundColor: item.body }]}></View>
+                                                    <View style={[{ height: 38, width: 38, borderRadius: "50%", backgroundColor: item.id == noteColor+1 ? item.head : item.body }]}></View>
                                                 </View>
                                             </TouchableOpacity>
                                         )}
