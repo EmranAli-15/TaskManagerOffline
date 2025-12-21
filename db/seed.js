@@ -10,7 +10,7 @@ export const seedCategoryTable = async () => {
   if (result?.count === 0) {
     await db.runAsync(`
       INSERT INTO category (name)
-      VALUES ('All Notes');
+      VALUES ('All');
     `);
   }
 };

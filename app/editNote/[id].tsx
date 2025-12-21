@@ -254,7 +254,7 @@ export default function EditNote() {
                                         keyExtractor={(item: any, index) => index.toString()}
                                         renderItem={({ item }) => (
                                             <TouchableOpacity onPress={() => setCategoryId(item.id)}>
-                                                <View style={{ flex: 1, marginHorizontal: 4, width: "100%" }}>
+                                                <View style={{ flex: 1, marginHorizontal: 10, width: "100%" }}>
                                                     <View style={{ backgroundColor: item?.id == categoryId ? "#0077b6" : colorBg, padding: 2, borderRadius: 16 }}>
                                                         <ThemedText style={{ fontSize: 16, textAlign: "center", color: item?.id == categoryId ? "#fff" : color }}>{item?.name}</ThemedText>
                                                     </View>

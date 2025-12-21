@@ -88,7 +88,7 @@ export default function HomeScreen() {
     const handleDeleteCategory = async () => {
         if (idForDeleteCategory && idForDeleteCategory > 1) {
             await deleteCategory(idForDeleteCategory);
-            await handleGetNotes({ id: 1, title: "All Notes" });
+            await handleGetNotes({ id: 1, title: "All" });
             handleGetCategory();
         }
         setDeleteCategoryModal(false);
@@ -123,7 +123,7 @@ export default function HomeScreen() {
     useEffect(() => {
         const fn = async () => {
             handleGetCategory();
-            await handleGetNotes({ id: 1, title: "All Notes" });
+            await handleGetNotes({ id: 1, title: "All" });
             setReFetch(false);
         }
         if (isSeeded || reFetch) {
@@ -294,7 +294,7 @@ export default function HomeScreen() {
                     data={notes}
                     numColumns={numColumns}
                     ListEmptyComponent={<View>
-                        <ThemedText style={{ color: "gray", textAlign: "center", marginTop: 10 }}>{currentCategory == "All Notes" ? "You have no notes yet!" : `${currentCategory} \nis empty.`}</ThemedText>
+                        <ThemedText style={{ color: "gray", textAlign: "center", marginTop: 10 }}>{currentCategory == "All" ? "You have no notes yet!" : `${currentCategory} \nis empty.`}</ThemedText>
                     </View>}
                     key={numColumns}
                     keyExtractor={(item: TNote, index) => index.toString()}
@@ -323,12 +323,12 @@ export default function HomeScreen() {
 
                             <View style={[styles.box]}>
                                 <View style={{ height: 40, backgroundColor: item.head }}>
-                                    <View style={{ height: "100%", flex: 1, justifyContent: "center", backgroundColor: item.isChecked ? "#00000085" : "" }}>
+                                    <View style={{ height: "100%", flex: 1, justifyContent: "center", backgroundColor: item.isChecked ? "#000000ad" : "" }}>
                                         <Text style={{ paddingHorizontal: 10, fontSize: 16, fontWeight: "400", overflow: "hidden", color: "black" }}>{item.title.length > 30 ? <Text>{item.title.slice(0, 30)}...</Text> : item.title}</Text>
                                     </View>
                                 </View>
                                 <View style={{ height: 90, backgroundColor: item.body }}>
-                                    <View style={{ height: "100%", backgroundColor: item.isChecked ? "#00000085" : "" }}>
+                                    <View style={{ height: "100%", backgroundColor: item.isChecked ? "#000000ad" : "" }}>
                                         <Text style={styles.item}>
                                             {item.details.length > 110 ? <Text>{item.details.slice(0, 110)}...</Text> : item.details}
                                         </Text>
@@ -379,7 +379,7 @@ const styles = StyleSheet.create({
     navList: {
         paddingVertical: 4,
         paddingHorizontal: 8,
-        borderRadius: 50,
+        borderRadius: 20,
     },
     navListText: {
         fontSize: 14

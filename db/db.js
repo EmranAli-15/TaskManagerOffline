@@ -73,24 +73,24 @@ export const getSingleNote = async (id) => {
 
 
 export const updateNote = async ({ title, details, color_id, category_id, id }) => {
-    const db = await initDB();
-    await db.runAsync(`
+  const db = await initDB();
+  await db.runAsync(`
         UPDATE note
         SET title=?, details=?, color_id=?, category_id=?
         WHERE id=?
         `,
-        [title, details, color_id, category_id, id]
-    )
+    [title, details, color_id, category_id, id]
+  )
 };
 
 
 export const deleteNote = async (id) => {
-    const db = await initDB();
-    await db.runAsync(`
+  const db = await initDB();
+  await db.runAsync(`
         DELETE FROM note WHERE id=?
         `,
-        [id]
-    )
+    [id]
+  )
 };
 // ============== END == NOTES TABLE QUERIES == END ================
 
@@ -150,3 +150,30 @@ export const getColors = async () => {
   return data;
 };
 // ============== END == COLOR TABLE QUERIES == END ================
+
+
+
+
+
+
+
+
+
+
+
+
+// 🚫VERY SENSETIVE -> IT'S FOR DELETE THE ENTIRE DATABASE
+export const closeDB = async () => {
+  if (db) {
+    await db.closeAsync();
+    db = null;
+  }
+};
+export const deleteDB = async () => {
+  await closeDB();
+  try {
+    await SQLite.deleteDatabaseAsync(DB_NAME);
+  } catch (err) {
+  }
+};
+// 🚫VERY SENSETIVE -> IT'S FOR DELETE THE ENTIRE DATABASE
