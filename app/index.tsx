@@ -31,7 +31,7 @@ export default function HomeScreen() {
 
     const [selection, setSelection] = useState(false);
 
-
+    const [deleteMultipleNoteModal, setDeleteMultipleNoteModal] = useState(false);
 
     const [addCategoryModal, setAddCategoryModal] = useState(false);
     const [newCategoryName, setNewCategoryName] = useState<any>("");
@@ -100,9 +100,14 @@ export default function HomeScreen() {
     // Delete note
     const handleDeleteMultipleNote = async () => {
         const ids = notes.filter((note: TNote) => note.isChecked == true).map((note: TNote) => note.id);
-        await deleteMultipleNote(ids);
-        handleGetNotes({ id: 1, title: "All" });
-        setSelection(false);
+
+        if (!deleteMultipleNoteModal) setDeleteMultipleNoteModal(true);
+        else {
+            await deleteMultipleNote(ids);
+            handleGetNotes({ id: 1, title: "All" });
+            setSelection(false);
+            setDeleteMultipleNoteModal(false);
+        }
     }
     const handleSelectNote = (id: number) => {
         if (!selection) setSelection(true);
@@ -218,6 +223,36 @@ export default function HomeScreen() {
                     </View>
                 </MyModal>
             </View>
+
+            <View>
+                <MyModal modal={deleteMultipleNoteModal} setModal={setDeleteMultipleNoteModal}>
+                    <View style={{ flexDirection: "column", rowGap: 8 }}>
+                        <View style={{ alignItems: "center" }}>
+                            <View style={{
+                                padding: 5,
+                                backgroundColor: "#fff4e5",
+                                height: 45,
+                                width: 45,
+                                borderRadius: "50%",
+                                alignItems: "center",
+                                justifyContent: "center"
+                            }}
+                            >
+                                <Foundation name="alert" size={30} color="#ed6c02" />
+                            </View>
+                        </View>
+                        <Text style={{ color: "gray", textAlign: "center" }}>This action cannot be undone. All notes associated with this category will be lost.</Text>
+
+                        <TouchableOpacity
+                            onPress={handleDeleteMultipleNote}
+                        >
+                            <View style={{ width: "100%", backgroundColor: "#0077b6", padding: 4 }}>
+                                <Text style={{ textAlign: "center", color: "white" }}>Delete</Text>
+                            </View>
+                        </TouchableOpacity>
+                    </View>
+                </MyModal>
+            </View>
             {/* MODAL VIEW SECTION END */}
 
 
@@ -269,9 +304,9 @@ export default function HomeScreen() {
             <View style={styles.viewButton}>
                 <View>
                     {
-                        selection && <View style={{ flexDirection: "row", columnGap: 10 }}>
+                        selection && <View style={{ flexDirection: "row", columnGap: 20 }}>
+                            <Pressable onPress={() => handleDeleteMultipleNote()}><MaterialIcons name="delete" size={24} color="red" /></Pressable>
                             <Pressable onPress={() => handleCancleSelection()}><ThemedText>Cancle</ThemedText></Pressable>
-                            <Pressable onPress={() => handleDeleteMultipleNote()}><ThemedText>Delete</ThemedText></Pressable>
                         </View>
                     }
                 </View>
@@ -378,7 +413,8 @@ const styles = StyleSheet.create({
     viewButton: {
         flexDirection: "row",
         alignItems: "center",
-        justifyContent: "space-between"
+        justifyContent: "space-between",
+        marginVertical: 8
     },
     navList: {
         paddingVertical: 4,
