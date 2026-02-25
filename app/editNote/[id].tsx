@@ -125,33 +125,13 @@ export default function EditNote() {
                     <View>
 
 
+
+
                         <>
                             {
                                 openModal && <MyModal modal={openModal} setModal={setOpenModal}>
 
-
-                                    <View style={{ alignItems: "center" }}>
-                                        <TouchableOpacity
-                                            onPress={() => {
-                                                setReadMode(!readMode);
-                                                setOpenModal(false);
-                                            }}>
-                                            {
-                                                readMode ? <View style={{ alignItems: "center" }}>
-                                                    <Entypo name="eye" size={24} color="#0077b6" />
-                                                    <Text>Reading Mode</Text>
-                                                </View> :
-                                                    <View style={{ alignItems: "center" }}>
-                                                        <Entypo name="edit" size={24} color="#0077b6" />
-                                                        <Text>Edit Mode</Text>
-                                                    </View>
-                                            }
-                                        </TouchableOpacity>
-                                    </View>
-
-                                    <View style={{ width: "100%", height: 2, backgroundColor: "gray", marginVertical: 20 }}></View>
-
-                                    <View style={{ alignItems: "center" }}>
+                                    <View style={{ flexDirection: "column", alignItems: "center" }}>
                                         <TouchableOpacity onPress={handleDeleteNote}>
                                             <AntDesign name="delete" size={24} color="red" />
                                         </TouchableOpacity>
@@ -165,11 +145,26 @@ export default function EditNote() {
 
 
 
-                        <View style={{ flexDirection: "row", justifyContent: "flex-end" }}>
-                            <TouchableOpacity onPress={() => setOpenModal(!openModal)}>
-                                <SimpleLineIcons name="options-vertical" size={25} color={color} />
+                        <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "flex-end", columnGap: 20 }}>
+                            <TouchableOpacity
+                                onPress={() => {
+                                    setReadMode(!readMode);
+                                    setOpenModal(false);
+                                }}>
+                                {
+                                    readMode ?
+                                        <Entypo name="eye" size={28} color="#0077b6" /> :
+                                        <Entypo name="edit" size={28} color="#0077b6" />
+                                }
                             </TouchableOpacity>
+                            <View style={{ flexDirection: "row", justifyContent: "flex-end" }}>
+                                <TouchableOpacity onPress={() => setOpenModal(!openModal)}>
+                                    <SimpleLineIcons name="options-vertical" size={25} color={color} />
+                                </TouchableOpacity>
+                            </View>
                         </View>
+
+
                         <TextInput
                             multiline={true}
                             style={[styles.title, { color: noteColorPallate[noteColor]?.head }]}
@@ -241,7 +236,7 @@ export default function EditNote() {
                                         renderItem={({ item }) => (
                                             <TouchableOpacity onPress={() => setNoteColor(item.id - 1)}>
                                                 <View style={[styles.colorStyle, { backgroundColor: item.head, marginHorizontal: 10, flex: 1, alignItems: "center", justifyContent: "center", padding: 4 }]}>
-                                                    <View style={[{ height: 38, width: 38, borderRadius: "50%", backgroundColor: item.id == noteColor+1 ? item.head : item.body }]}></View>
+                                                    <View style={[{ height: 38, width: 38, borderRadius: "50%", backgroundColor: item.id == noteColor + 1 ? item.head : item.body }]}></View>
                                                 </View>
                                             </TouchableOpacity>
                                         )}

@@ -362,7 +362,7 @@ export default function HomeScreen() {
 
                             <View style={[styles.box]}>
                                 <View style={{ height: 40, backgroundColor: item.head }}>
-                                    <View style={{ height: "100%", flex: 1, justifyContent: "center", backgroundColor: item.isChecked ? "#000000ad" : "" }}>
+                                    <View style={{ height: "100%", flex: 1, justifyContent: "center", backgroundColor: item.isChecked ? "#000000b7" : "" }}>
                                         <Text style={{ paddingHorizontal: 10, fontSize: 16, fontWeight: "400", overflow: "hidden", color: "black" }}>{item.title.length > 30 ? <Text>{item.title.slice(0, 30)}...</Text> : item.title}</Text>
                                     </View>
                                 </View>
