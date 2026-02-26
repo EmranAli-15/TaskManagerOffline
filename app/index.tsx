@@ -224,6 +224,11 @@ export default function HomeScreen() {
                 </MyModal>
             </View>
 
+
+
+
+            {/* Selected notes delete modal */}
+            {/* Selected notes delete modal */}
             <View>
                 <MyModal modal={deleteMultipleNoteModal} setModal={setDeleteMultipleNoteModal}>
                     <View style={{ flexDirection: "column", rowGap: 8 }}>
@@ -241,7 +246,7 @@ export default function HomeScreen() {
                                 <Foundation name="alert" size={30} color="#ed6c02" />
                             </View>
                         </View>
-                        <Text style={{ color: "gray", textAlign: "center" }}>This action cannot be undone. All notes associated with this category will be lost.</Text>
+                        <Text style={{ color: "gray", textAlign: "center" }}>This action cannot be undone. All selected notes will be lost.</Text>
 
                         <TouchableOpacity
                             onPress={handleDeleteMultipleNote}
@@ -253,6 +258,9 @@ export default function HomeScreen() {
                     </View>
                 </MyModal>
             </View>
+            {/* Selected notes delete modal end */}
+            {/* Selected notes delete modal end */}
+
             {/* MODAL VIEW SECTION END */}
 
 
@@ -262,6 +270,10 @@ export default function HomeScreen() {
                 HelixNotes
             </ThemedText>
 
+
+
+            {/* Categories section (top of the screen) */}
+            {/* Categories section (top of the screen) */}
             <View>
                 <ScrollView
                     horizontal
@@ -300,7 +312,17 @@ export default function HomeScreen() {
                     </TouchableOpacity>
                 </ScrollView>
             </View>
+            {/* Categories section (top of the screen) end */}
+            {/* Categories section (top of the screen) end */}
 
+
+
+
+
+
+
+            {/* Delete selected notes and list/grid view */}
+            {/* Delete selected notes and list/grid view */}
             <View style={styles.viewButton}>
                 <View>
                     {
@@ -320,6 +342,11 @@ export default function HomeScreen() {
                     </View>
                 </TouchableOpacity>
             </View>
+            {/* Delete selected notes and list/grid view end */}
+            {/* Delete selected notes and list/grid view end */}
+
+
+
 
             <TouchableOpacity
                 onPress={() => router.navigate("/AddNote")}
