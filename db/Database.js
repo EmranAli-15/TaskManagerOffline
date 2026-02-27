@@ -181,14 +181,14 @@ export const getDataFromCategoryTable = async () => {
 
 
 // 🚫VERY SENSETIVE -> IT'S FOR DELETE THE ENTIRE DATABASE
-export const closeDB = async () => {
+export const closeDBOld = async () => {
     if (db) {
         await db.closeAsync();
         db = null;
     }
 };
-export const deleteDB = async () => {
-    await closeDB();
+export const deleteDBOld = async () => {
+    await closeDBOld();
     try {
         await SQLite.deleteDatabaseAsync(DB_NAME);
     } catch (err) {

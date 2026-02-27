@@ -40,7 +40,7 @@ export default function AddNote() {
   const [title, setTitle] = useState("");
   const [details, setDetails] = useState("");
   const [categoryId, setCategoryId] = useState(1);
-  const [noteColor, setNoteColor] = useState(Math.floor(Math.random() * 6));
+  const [noteColor, setNoteColor] = useState(Math.floor(Math.random() * 7));
 
 
   const [categories, setCategories] = useState<string[]>([]);

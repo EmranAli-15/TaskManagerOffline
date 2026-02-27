@@ -1,5 +1,10 @@
 {
   "expo": {
+    "splash": {
+      "image": "./assets/images/icon.jpg",
+      "resizeMode": "cover",
+      "backgroundColor": "#FFFFFF"
+    },
     "name": "HelixNotes",
     "assetBundlePatterns": [
       "./assets/database/*"
@@ -7,7 +12,7 @@
     "slug": "TaskManagerOffline",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/notes.png",
+    "icon": "./assets/images/icon.jpg",
     "scheme": "taskmanageroffline",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
@@ -16,10 +21,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "backgroundColor": "#E6F4FE",
-        "foregroundImage": "./assets/images/notes.png",
-        "backgroundImage": "./assets/images/notes.png",
-        "monochromeImage": "./assets/images/notes.png"
+        "backgroundColor": "#FFFFFF"
       },
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false,

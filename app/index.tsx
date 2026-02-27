@@ -5,7 +5,6 @@ import { ThemedView } from '@/components/themed-view';
 import { useSeed } from '@/contextProvider/ContextProvider';
 import { addNewCategory, deleteCategory, deleteMultipleNote, getCategories, getNotesByCategory } from '@/db/db';
 import AntDesign from '@expo/vector-icons/AntDesign';
-import Entypo from '@expo/vector-icons/Entypo';
 import Foundation from '@expo/vector-icons/Foundation';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { useRouter } from 'expo-router';
@@ -161,254 +160,260 @@ export default function HomeScreen() {
     }
     else return (
         <Container>
-
-            {/* MODAL VIEW SECTION */}
-            <View>
-                <MyModal modal={deleteCategoryModal} setModal={setDeleteCategoryModal}>
-                    <View style={{ flexDirection: "column", rowGap: 8 }}>
-                        <View style={{ alignItems: "center" }}>
-                            <View style={{
-                                padding: 5,
-                                backgroundColor: "#fff4e5",
-                                height: 45,
-                                width: 45,
-                                borderRadius: "50%",
-                                alignItems: "center",
-                                justifyContent: "center"
-                            }}
-                            >
-                                <Foundation name="alert" size={30} color="#ed6c02" />
-                            </View>
-                        </View>
-                        <Text style={{ textAlign: "center", fontWeight: "400", fontSize: 18 }}>Delete <Text style={{ color: "red", fontWeight: "600" }}>{wantTodeleteCategoryName}</Text> category?</Text>
-                        <Text style={{ color: "gray", textAlign: "center" }}>This action cannot be undone. All notes associated with this category will be lost.</Text>
-
-                        <TouchableOpacity
-                            onPress={handleDeleteCategory}
-                        >
-                            <View style={{ width: "100%", backgroundColor: "#0077b6", padding: 4 }}>
-                                <Text style={{ textAlign: "center", color: "white" }}>Delete</Text>
-                            </View>
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                            onPress={() => setDeleteCategoryModal(false)}
-                        >
-                            <View style={{ width: "100%", borderWidth: 1, borderColor: "#0077b6", padding: 4 }}>
-                                <Text style={{ textAlign: "center" }}>Cancle</Text>
-                            </View>
-                        </TouchableOpacity>
-                    </View>
-                </MyModal>
-            </View>
-
-            <View>
-                <MyModal modal={addCategoryModal} setModal={setAddCategoryModal}>
-                    <View style={{ flexDirection: "column", rowGap: 8 }}>
-                        <View>
-                            <Text>Category Name:</Text>
-                            <TextInput
-                                style={styles.inputStyle}
-                                onChangeText={text => setNewCategoryName(text)}
-                                value={newCategoryName}
-                            >
-                            </TextInput>
-                        </View>
-                        <TouchableOpacity
-                            onPress={handleAddCategory}
-                        >
-                            <View style={{ width: "100%", backgroundColor: "#0077b6", padding: 4 }}>
-                                <Text style={{ textAlign: "center", color: "white" }}>Add</Text>
-                            </View>
-                        </TouchableOpacity>
-                    </View>
-                </MyModal>
-            </View>
-
-
-
-
-            {/* Selected notes delete modal */}
-            {/* Selected notes delete modal */}
-            <View>
-                <MyModal modal={deleteMultipleNoteModal} setModal={setDeleteMultipleNoteModal}>
-                    <View style={{ flexDirection: "column", rowGap: 8 }}>
-                        <View style={{ alignItems: "center" }}>
-                            <View style={{
-                                padding: 5,
-                                backgroundColor: "#fff4e5",
-                                height: 45,
-                                width: 45,
-                                borderRadius: "50%",
-                                alignItems: "center",
-                                justifyContent: "center"
-                            }}
-                            >
-                                <Foundation name="alert" size={30} color="#ed6c02" />
-                            </View>
-                        </View>
-                        <Text style={{ color: "gray", textAlign: "center" }}>This action cannot be undone. All selected notes will be lost.</Text>
-
-                        <TouchableOpacity
-                            onPress={handleDeleteMultipleNote}
-                        >
-                            <View style={{ width: "100%", backgroundColor: "#0077b6", padding: 4 }}>
-                                <Text style={{ textAlign: "center", color: "white" }}>Delete</Text>
-                            </View>
-                        </TouchableOpacity>
-                    </View>
-                </MyModal>
-            </View>
-            {/* Selected notes delete modal end */}
-            {/* Selected notes delete modal end */}
-
-            {/* MODAL VIEW SECTION END */}
-
-
-
-
-            <ThemedText style={{ fontSize: 30, fontWeight: 700 }}>
+            <ThemedText style={{ fontSize: 30, fontWeight: 700, backgroundColor: "cyan", color: "#000000", padding: 10 }}>
                 HelixNotes
             </ThemedText>
 
-
-
-            {/* Categories section (top of the screen) */}
-            {/* Categories section (top of the screen) */}
-            <View>
-                <ScrollView
-                    horizontal
-                    showsHorizontalScrollIndicator={false}
-                    contentContainerStyle={{ gap: 8 }}
-                    style={{ marginTop: 20 }}
-                >
-                    {
-                        categories.map((nav: any, idx) => <TouchableOpacity
-                            key={idx}
-                            onPress={() => {
-                                handleCancleSelection()
-                                handleGetNotes({ id: nav.id, title: nav.name })
-                            }}
-                            onLongPress={() => {
-                                setWantTodeleteCategoryName(nav.name)
-                                setIdForDeleteCategory(nav.id);
-                                if (nav.id !== 1)
-                                    setDeleteCategoryModal(true);
-                            }}
-                        >
-                            <ThemedView style={[styles.navList, currentCategory === nav.name && { backgroundColor: "#0077b6" }]}>
-                                <ThemedText style={[styles.navListText, currentCategory === nav.name && { color: "#fff" }]}>{nav.name}</ThemedText>
-                            </ThemedView>
-                        </TouchableOpacity>)
-                    }
-
-                    <TouchableOpacity
-                        onPress={() => setAddCategoryModal(true)}
-                    >
-                        <ThemedView style={styles.navList}>
-                            <ThemedText style={styles.navListText}>
-                                <AntDesign name="plus" size={24} color="#0077b6" />
-                            </ThemedText>
-                        </ThemedView>
-                    </TouchableOpacity>
-                </ScrollView>
-            </View>
-            {/* Categories section (top of the screen) end */}
-            {/* Categories section (top of the screen) end */}
-
-
-
-
-
-
-
-            {/* Delete selected notes and list/grid view */}
-            {/* Delete selected notes and list/grid view */}
-            <View style={styles.viewButton}>
+            <View style={{ marginHorizontal: 10, height: "100%" }}>
+                {/* MODAL VIEW SECTION */}
                 <View>
-                    {
-                        selection && <View style={{ flexDirection: "row", columnGap: 20 }}>
-                            <Pressable onPress={() => handleDeleteMultipleNote()}><MaterialIcons name="delete" size={24} color="red" /></Pressable>
-                            <Pressable onPress={() => handleCancleSelection()}><ThemedText>Cancle</ThemedText></Pressable>
-                        </View>
-                    }
-                </View>
-                <TouchableOpacity onPress={() => setNumColumns(numColumns === 1 ? 2 : 1)}>
-                    <View>
-                        {
-                            numColumns === 1 ? <MaterialIcons name="checklist" size={35} color="#0077b6" />
-                                :
-                                <Entypo name="grid" size={35} color="#0077b6" />
-                        }
-                    </View>
-                </TouchableOpacity>
-            </View>
-            {/* Delete selected notes and list/grid view end */}
-            {/* Delete selected notes and list/grid view end */}
-
-
-
-
-            <TouchableOpacity
-                onPress={() => router.navigate("/AddNote")}
-                style={styles.addNote}
-            >
-                <AntDesign name="file-add" size={24} color="white" />
-            </TouchableOpacity>
-
-            <View style={{ flex: 1 }}>
-                <FlatList
-                    data={notes}
-                    numColumns={numColumns}
-                    ListEmptyComponent={<View>
-                        <ThemedText style={{ color: "gray", textAlign: "center", marginTop: 10 }}>{currentCategory == "All" ? "You have no notes yet!" : `${currentCategory} \nis empty.`}</ThemedText>
-                    </View>}
-                    key={numColumns}
-                    keyExtractor={(item: TNote, index) => index.toString()}
-                    renderItem={({ item }) => (
-
-
-                        <Pressable
-                            onLongPress={() => handleSelectNote(item.id)}
-                            style={{
-                                width: numColumns == 2 ? "50%" : "auto",
-                                marginTop: 5,
-                                flex: 1,
-                                paddingHorizontal: 3
-                            }}
-                            onPress={() => {
-                                if (selection) {
-                                    handleSelectNote(item.id)
-                                } else {
-                                    router.push({
-                                        pathname: '/editNote/[id]',
-                                        params: { id: item.id },
-                                    });
-                                }
-                            }}
-                        >
-
-                            <View style={[styles.box]}>
-                                <View style={{ height: 40, backgroundColor: item.head }}>
-                                    <View style={{ height: "100%", flex: 1, justifyContent: "center", backgroundColor: item.isChecked ? "#000000b7" : "" }}>
-                                        <Text style={{ paddingHorizontal: 10, fontSize: 16, fontWeight: "400", overflow: "hidden", color: "black" }}>{item.title.length > 30 ? <Text>{item.title.slice(0, 30)}...</Text> : item.title}</Text>
-                                    </View>
-                                </View>
-                                <View style={{ height: 90, backgroundColor: item.body }}>
-                                    <View style={{ height: "100%", backgroundColor: item.isChecked ? "#000000ad" : "" }}>
-                                        <Text style={styles.item}>
-                                            {item.details.length > 110 ? <Text>{item.details.slice(0, 110)}...</Text> : item.details}
-                                        </Text>
-                                    </View>
+                    <MyModal modal={deleteCategoryModal} setModal={setDeleteCategoryModal}>
+                        <View style={{ flexDirection: "column", rowGap: 8 }}>
+                            <View style={{ alignItems: "center" }}>
+                                <View style={{
+                                    padding: 5,
+                                    backgroundColor: "#fff4e5",
+                                    height: 45,
+                                    width: 45,
+                                    borderRadius: "50%",
+                                    alignItems: "center",
+                                    justifyContent: "center"
+                                }}
+                                >
+                                    <Foundation name="alert" size={30} color="#ed6c02" />
                                 </View>
                             </View>
+                            <Text style={{ textAlign: "center", fontWeight: "400", fontSize: 18 }}>Delete <Text style={{ color: "red", fontWeight: "600" }}>{wantTodeleteCategoryName}</Text> category?</Text>
+                            <Text style={{ color: "gray", textAlign: "center" }}>This action cannot be undone. All notes associated with this category will be lost.</Text>
 
-                        </Pressable>
-                    )}
-                    refreshControl={
-                        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-                    }
-                    contentContainerStyle={{ paddingBottom: 120 }}
-                />
+                            <TouchableOpacity
+                                onPress={handleDeleteCategory}
+                            >
+                                <View style={{ width: "100%", backgroundColor: "#0077b6", padding: 4 }}>
+                                    <Text style={{ textAlign: "center", color: "white" }}>Delete</Text>
+                                </View>
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                onPress={() => setDeleteCategoryModal(false)}
+                            >
+                                <View style={{ width: "100%", borderWidth: 1, borderColor: "#0077b6", padding: 4 }}>
+                                    <Text style={{ textAlign: "center" }}>Cancle</Text>
+                                </View>
+                            </TouchableOpacity>
+                        </View>
+                    </MyModal>
+                </View>
+
+                <View>
+                    <MyModal modal={addCategoryModal} setModal={setAddCategoryModal}>
+                        <View style={{ flexDirection: "column", rowGap: 8 }}>
+                            <View>
+                                <Text>Category Name:</Text>
+                                <TextInput
+                                    style={styles.inputStyle}
+                                    onChangeText={text => setNewCategoryName(text)}
+                                    value={newCategoryName}
+                                >
+                                </TextInput>
+                            </View>
+                            <TouchableOpacity
+                                onPress={handleAddCategory}
+                            >
+                                <View style={{ width: "100%", backgroundColor: "#0077b6", padding: 4 }}>
+                                    <Text style={{ textAlign: "center", color: "white" }}>Add</Text>
+                                </View>
+                            </TouchableOpacity>
+                        </View>
+                    </MyModal>
+                </View>
+
+
+
+
+                {/* Selected notes delete modal */}
+                {/* Selected notes delete modal */}
+                <View>
+                    <MyModal modal={deleteMultipleNoteModal} setModal={setDeleteMultipleNoteModal}>
+                        <View style={{ flexDirection: "column", rowGap: 8 }}>
+                            <View style={{ alignItems: "center" }}>
+                                <View style={{
+                                    padding: 5,
+                                    backgroundColor: "#fff4e5",
+                                    height: 45,
+                                    width: 45,
+                                    borderRadius: "50%",
+                                    alignItems: "center",
+                                    justifyContent: "center"
+                                }}
+                                >
+                                    <Foundation name="alert" size={30} color="#ed6c02" />
+                                </View>
+                            </View>
+                            <Text style={{ color: "gray", textAlign: "center" }}>This action cannot be undone. All selected notes will be lost.</Text>
+
+                            <TouchableOpacity
+                                onPress={handleDeleteMultipleNote}
+                            >
+                                <View style={{ width: "100%", backgroundColor: "#0077b6", padding: 4 }}>
+                                    <Text style={{ textAlign: "center", color: "white" }}>Delete</Text>
+                                </View>
+                            </TouchableOpacity>
+                        </View>
+                    </MyModal>
+                </View>
+                {/* Selected notes delete modal end */}
+                {/* Selected notes delete modal end */}
+
+                {/* MODAL VIEW SECTION END */}
+
+
+
+
+
+
+
+
+                {/* Categories section (top of the screen) */}
+                {/* Categories section (top of the screen) */}
+                <View>
+                    <ScrollView
+                        horizontal
+                        showsHorizontalScrollIndicator={false}
+                        contentContainerStyle={{ gap: 8 }}
+                        style={{ marginTop: 20 }}
+                    >
+                        {
+                            categories.map((nav: any, idx) => <TouchableOpacity
+                                key={idx}
+                                onPress={() => {
+                                    handleCancleSelection()
+                                    handleGetNotes({ id: nav.id, title: nav.name })
+                                }}
+                                onLongPress={() => {
+                                    setWantTodeleteCategoryName(nav.name)
+                                    setIdForDeleteCategory(nav.id);
+                                    if (nav.id !== 1)
+                                        setDeleteCategoryModal(true);
+                                }}
+                            >
+                                <ThemedView style={[styles.navList, currentCategory === nav.name && { backgroundColor: "#0077b6" }]}>
+                                    <ThemedText style={[styles.navListText, currentCategory === nav.name && { color: "#fff" }]}>{nav.name}</ThemedText>
+                                </ThemedView>
+                            </TouchableOpacity>)
+                        }
+
+                        <TouchableOpacity
+                            onPress={() => setAddCategoryModal(true)}
+                        >
+                            <ThemedView style={styles.navList}>
+                                <ThemedText style={styles.navListText}>
+                                    <AntDesign name="plus" size={24} color="#0077b6" />
+                                </ThemedText>
+                            </ThemedView>
+                        </TouchableOpacity>
+                    </ScrollView>
+                </View>
+                {/* Categories section (top of the screen) end */}
+                {/* Categories section (top of the screen) end */}
+
+
+
+
+
+
+
+                {/* Delete selected notes and list/grid view */}
+                {/* Delete selected notes and list/grid view */}
+                <View style={styles.viewButton}>
+                    <View>
+                        {
+                            selection && <View style={{ flexDirection: "row", columnGap: 10, alignItems: "center" }}>
+                                <Pressable onPress={() => handleDeleteMultipleNote()}><MaterialIcons name="delete" size={30} color="red" /></Pressable>
+                                <Pressable onPress={() => handleCancleSelection()}><Text style={{fontSize:16}}>Cancle</Text></Pressable>
+                            </View>
+                        }
+                    </View>
+
+                    {/* View button */}
+                    {/* <TouchableOpacity onPress={() => setNumColumns(numColumns === 1 ? 2 : 1)}>
+                        <View>
+                            {
+                                numColumns === 1 ? <MaterialIcons name="checklist" size={35} color="#0077b6" />
+                                    :
+                                    <Entypo name="grid" size={35} color="#0077b6" />
+                            }
+                        </View>
+                    </TouchableOpacity> */}
+                </View>
+                {/* Delete selected notes and list/grid view end */}
+                {/* Delete selected notes and list/grid view end */}
+
+
+
+
+                <TouchableOpacity
+                    onPress={() => router.navigate("/AddNote")}
+                    style={styles.addNote}
+                >
+                    <AntDesign name="file-add" size={24} color="white" />
+                </TouchableOpacity>
+
+                <View style={{ flex: 1 }}>
+                    <FlatList
+                        data={notes}
+                        numColumns={2}
+                        ListEmptyComponent={
+                            <View>
+                                <ThemedText style={{ color: "gray", textAlign: "center", marginTop: 10 }}>{currentCategory == "All" ? "You have no notes yet!" : `${currentCategory} \nis empty.`}</ThemedText>
+                            </View>
+                        }
+                        keyExtractor={(item: TNote, index) => index.toString()}
+                        renderItem={({ item, index }) => (
+                            <Pressable
+                                onLongPress={() => handleSelectNote(item.id)}
+                                style={{
+                                    width: "50%",
+                                    marginTop: 5,
+                                    flex: 1,
+                                    paddingHorizontal: 5,
+                                    alignItems: "center",
+                                    marginBottom: 15
+                                }}
+                                onPress={() => {
+                                    if (selection) {
+                                        handleSelectNote(item.id)
+                                    } else {
+                                        router.push({
+                                            pathname: '/editNote/[id]',
+                                            params: { id: item.id },
+                                        });
+                                    }
+                                }}
+                            >
+
+                                <View style={[styles.box, { transform: [{ rotate: `${(index + 1) % 2 ? '-2deg' : '2deg'}` }] }]}>
+                                    <View style={{ height: 40, backgroundColor: item.head }}>
+                                        <View style={{ height: "100%", flex: 1, justifyContent: "center", backgroundColor: item.isChecked ? "#000000b7" : "" }}>
+                                            <Text style={{ paddingHorizontal: 10, fontSize: 14, fontWeight: "400", overflow: "hidden", color: "black" }}>{item.title.length > 30 ? <Text>{item.title.slice(0, 30)}...</Text> : item.title}</Text>
+                                        </View>
+                                    </View>
+                                    <View style={{ height: 90, backgroundColor: item.body }}>
+                                        <View style={{ height: "100%", backgroundColor: item.isChecked ? "#000000ad" : "" }}>
+                                            <Text style={styles.item}>
+                                                {item.details.length > 110 ? <Text>{item.details.slice(0, 110)}...</Text> : item.details}
+                                            </Text>
+                                        </View>
+                                    </View>
+                                </View>
+
+                            </Pressable>
+                        )}
+                        refreshControl={
+                            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+                        }
+                        contentContainerStyle={{ paddingBottom: 140 }}
+                    />
+                </View>
             </View>
 
         </Container>
@@ -418,7 +423,7 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
     item: {
         margin: 10,
-        fontSize: 14,
+        fontSize: 12,
         color: "gray",
         overflow: "hidden"
     },
@@ -430,7 +435,7 @@ const styles = StyleSheet.create({
     },
     addNote: {
         position: "absolute",
-        bottom: 40,
+        bottom: 100,
         right: 10,
         backgroundColor: "#0077b6",
         padding: 20,
@@ -441,7 +446,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "space-between",
-        marginVertical: 8
+        marginVertical: 16
     },
     navList: {
         paddingVertical: 4,
