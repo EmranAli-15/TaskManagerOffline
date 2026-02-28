@@ -168,7 +168,7 @@ export default function HomeScreen() {
                 {/* MODAL VIEW SECTION */}
                 <View>
                     <MyModal modal={deleteCategoryModal} setModal={setDeleteCategoryModal}>
-                        <View style={{ flexDirection: "column", rowGap: 8 }}>
+                        <View style={{ flexDirection: "column", rowGap: 20 }}>
                             <View style={{ alignItems: "center" }}>
                                 <View style={{
                                     padding: 5,
@@ -189,15 +189,15 @@ export default function HomeScreen() {
                             <TouchableOpacity
                                 onPress={handleDeleteCategory}
                             >
-                                <View style={{ width: "100%", backgroundColor: "#0077b6", padding: 4 }}>
+                                <View style={styles.button}>
                                     <Text style={{ textAlign: "center", color: "white" }}>Delete</Text>
                                 </View>
                             </TouchableOpacity>
                             <TouchableOpacity
                                 onPress={() => setDeleteCategoryModal(false)}
                             >
-                                <View style={{ width: "100%", borderWidth: 1, borderColor: "#0077b6", padding: 4 }}>
-                                    <Text style={{ textAlign: "center" }}>Cancle</Text>
+                                <View style={{ borderColor: "#0077b6", backgroundColor: "white", padding: 5, borderRadius:5, borderWidth: 1 }}>
+                                    <Text style={{ textAlign: "center", color: "black" }}>Cancle</Text>
                                 </View>
                             </TouchableOpacity>
                         </View>
@@ -206,7 +206,7 @@ export default function HomeScreen() {
 
                 <View>
                     <MyModal modal={addCategoryModal} setModal={setAddCategoryModal}>
-                        <View style={{ flexDirection: "column", rowGap: 8 }}>
+                        <View style={{ flexDirection: "column", rowGap: 20 }}>
                             <View>
                                 <Text>Category Name:</Text>
                                 <TextInput
@@ -219,7 +219,7 @@ export default function HomeScreen() {
                             <TouchableOpacity
                                 onPress={handleAddCategory}
                             >
-                                <View style={{ width: "100%", backgroundColor: "#0077b6", padding: 4 }}>
+                                <View style={styles.button}>
                                     <Text style={{ textAlign: "center", color: "white" }}>Add</Text>
                                 </View>
                             </TouchableOpacity>
@@ -296,8 +296,8 @@ export default function HomeScreen() {
                                         setDeleteCategoryModal(true);
                                 }}
                             >
-                                <ThemedView style={[styles.navList, currentCategory === nav.name && { backgroundColor: "#0077b6" }]}>
-                                    <ThemedText style={[styles.navListText, currentCategory === nav.name && { color: "#fff" }]}>{nav.name}</ThemedText>
+                                <ThemedView style={[styles.navList, currentCategory === nav.name && { backgroundColor: "cyan" }]}>
+                                    <ThemedText style={[styles.navListText, currentCategory === nav.name && { color: "#000" }]}>{nav.name}</ThemedText>
                                 </ThemedView>
                             </TouchableOpacity>)
                         }
@@ -329,7 +329,7 @@ export default function HomeScreen() {
                         {
                             selection && <View style={{ flexDirection: "row", columnGap: 10, alignItems: "center" }}>
                                 <Pressable onPress={() => handleDeleteMultipleNote()}><MaterialIcons name="delete" size={30} color="red" /></Pressable>
-                                <Pressable onPress={() => handleCancleSelection()}><Text style={{fontSize:16}}>Cancle</Text></Pressable>
+                                <Pressable onPress={() => handleCancleSelection()}><Text style={{ fontSize: 16 }}>Cancle</Text></Pressable>
                             </View>
                         }
                     </View>
@@ -391,10 +391,10 @@ export default function HomeScreen() {
                                 }}
                             >
 
-                                <View style={[styles.box, { transform: [{ rotate: `${(index + 1) % 2 ? '-2deg' : '2deg'}` }] }]}>
+                                <View style={[styles.box, { transform: [{ rotate: `${(index + 1) % 2 ? '-2deg' : '4deg'}` }] }]}>
                                     <View style={{ height: 40, backgroundColor: item.head }}>
                                         <View style={{ height: "100%", flex: 1, justifyContent: "center", backgroundColor: item.isChecked ? "#000000b7" : "" }}>
-                                            <Text style={{ paddingHorizontal: 10, fontSize: 14, fontWeight: "400", overflow: "hidden", color: "black" }}>{item.title.length > 30 ? <Text>{item.title.slice(0, 30)}...</Text> : item.title}</Text>
+                                            <Text style={{ paddingHorizontal: 10, fontSize: 13, fontWeight: "700", overflow: "hidden", color: "white" }}>{item.title.length > 30 ? <Text>{item.title.slice(0, 30)}...</Text> : item.title}</Text>
                                         </View>
                                     </View>
                                     <View style={{ height: 90, backgroundColor: item.body }}>
@@ -432,6 +432,7 @@ const styles = StyleSheet.create({
         overflow: "hidden",
         flex: 1,
         width: "100%",
+        backgroundColor: '#fff'
     },
     addNote: {
         position: "absolute",
@@ -461,5 +462,11 @@ const styles = StyleSheet.create({
         borderColor: "#0077b6",
         borderRadius: 4,
         marginTop: 1
+    },
+    button: {
+        width: "100%",
+        backgroundColor: "#0077b6",
+        padding: 5,
+        borderRadius: 4
     }
 });

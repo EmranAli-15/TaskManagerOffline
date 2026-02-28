@@ -27,13 +27,13 @@ export const seedColorTable = async () => {
   if (result?.count === 0) {
     await db.runAsync(`
       INSERT INTO color (head, body) VALUES
-      ('#77BEF0', '#CBDCEB'),
-      ('#ffdc75', '#fff2cc'),
-      ('#eca3a3', '#f6d6d6'),
-      ('#a5d732', '#ddf0b2'),
-      ('#d94c9f', '#f4cce3'),
-      ('#875ab2', '#d2c1e2'),
-      ('#FF5F00', '#FF8C00');
+      ('#77BEF0', '#FFCB61'),
+      ('#FE5D26', '#F2C078'),
+      ('#16C47F', '#FFD65A'),
+      ('#5DD3B6', '#6E5034'),
+      ('#124076', '#7F9F80'),
+      ('#FF7F11', '#ACBFA4'),
+      ('#6E026F', '#ABDADC');
     `);
   }
 };
