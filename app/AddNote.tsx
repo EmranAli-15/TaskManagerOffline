@@ -61,6 +61,11 @@ export default function AddNote() {
       setDetails("");
       router.navigate("/");
     }
+  };
+
+  const handleBackToHome = async () => {
+    await handleSaveNote();
+    router.push("/");
   }
 
 
@@ -98,7 +103,18 @@ export default function AddNote() {
 
   return (
     <Container>
-      <View style={{ flex: 1, height: "100%" }}>
+
+      <View style={{ backgroundColor: "cyan", flexDirection: "row", alignItems: "center", padding: 10, justifyContent: "space-between" }}>
+        <TouchableOpacity onPress={handleBackToHome}>
+          <Ionicons name="arrow-back-outline" size={28} color="black" />
+        </TouchableOpacity>
+        <ThemedText style={{ fontSize: 30, fontWeight: 700, color: "#000000" }}>
+          HelixNotes
+        </ThemedText>
+        <View></View>
+      </View>
+
+      <View style={{ flex: 1, height: "100%", marginHorizontal: 10 }}>
         <ScrollView>
           <View>
             <TextInput
@@ -143,11 +159,11 @@ export default function AddNote() {
         </View>
 
         <View style={{ position: "absolute", bottom: 10 }}>
-          <View style={{ zIndex: 100, backgroundColor: colorBg, borderRadius: 20, flex: 1 }}>
+          <View style={{ zIndex: 100, backgroundColor: "#0077b6", borderRadius: 20, flex: 1 }}>
             <TouchableOpacity onPress={() => setShowOps(!showOps)}>
               <View style={{ marginVertical: 10, alignSelf: "center" }}>
-                {!showOps && <MaterialIcons name="keyboard-double-arrow-up" size={40} color={color} />}
-                {showOps && <MaterialIcons name="keyboard-double-arrow-down" size={40} color={color} />}
+                {!showOps && <MaterialIcons name="keyboard-double-arrow-up" size={40} color="#fff" />}
+                {showOps && <MaterialIcons name="keyboard-double-arrow-down" size={40} color="#fff" />}
               </View>
             </TouchableOpacity>
 
@@ -157,29 +173,30 @@ export default function AddNote() {
                 showOps &&
                 <View style={{ marginTop: 10, marginBottom: 20 }}>
                   <FlatList
+                    style={{ marginHorizontal: 10 }}
                     horizontal
-                    data={noteColorPallate}
+                    data={categories}
                     keyExtractor={(item: any, index) => index.toString()}
                     renderItem={({ item }) => (
-                      <TouchableOpacity onPress={() => setNoteColor(item.id - 1)}>
-                        <View style={[styles.colorStyle, { backgroundColor: item.head, marginHorizontal: 10, flex: 1, alignItems: "center", justifyContent: "center", padding: 4 }]}>
-                          <View style={[{ height: 38, width: 38, borderRadius: "50%", backgroundColor: item.id == noteColor+1 ? item.head : item.body }]}></View>
+                      <TouchableOpacity onPress={() => setCategoryId(item.id)}>
+                        <View style={{ flex: 1, paddingHorizontal: 5, width: "100%" }}>
+                          <View style={{ backgroundColor: item?.id == categoryId ? "cyan" : "white", paddingHorizontal: 10, borderRadius: 16 }}>
+                            <ThemedText style={{ fontSize: 16, textAlign: "center", color: "black" }}>{item?.name}</ThemedText>
+                          </View>
                         </View>
                       </TouchableOpacity>
                     )}
                     contentContainerStyle={{ marginBottom: 10 }}
                   ></FlatList>
                   <FlatList
-                    style={{ marginTop: 10 }}
+                    style={{ marginTop: 20, marginHorizontal: 10 }}
                     horizontal
-                    data={categories}
+                    data={noteColorPallate}
                     keyExtractor={(item: any, index) => index.toString()}
                     renderItem={({ item }) => (
-                      <TouchableOpacity onPress={() => setCategoryId(item.id)}>
-                        <View style={{ flex: 1, marginHorizontal: 8, width: "100%" }}>
-                          <View style={{ backgroundColor: item?.id == categoryId ? "#0077b6" : colorBg, padding: 2, borderRadius: 16 }}>
-                            <ThemedText style={{ fontSize: 16, textAlign: "center", color: item?.id == categoryId ? "#fff" : color }}>{item?.name}</ThemedText>
-                          </View>
+                      <TouchableOpacity onPress={() => setNoteColor(item.id - 1)}>
+                        <View style={[styles.colorStyle, { backgroundColor: item.head, marginHorizontal: 10, flex: 1, alignItems: "center", justifyContent: "center", padding: 4 }]}>
+                          <View style={[{ height: 38, width: 38, borderRadius: "50%", backgroundColor: item.id == noteColor + 1 ? item.head : item.body }]}></View>
                         </View>
                       </TouchableOpacity>
                     )}

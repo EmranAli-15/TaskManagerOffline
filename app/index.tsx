@@ -398,7 +398,7 @@ export default function HomeScreen() {
                                         </View>
                                     </View>
                                     <View style={{ height: 90, backgroundColor: item.body }}>
-                                        <View style={{ height: "100%", backgroundColor: item.isChecked ? "#000000ad" : "" }}>
+                                        <View style={{ height: "100%", backgroundColor: item.isChecked ? "#ee0e0edc" : "" }}>
                                             <Text style={styles.item}>
                                                 {item.details.length > 110 ? <Text>{item.details.slice(0, 110)}...</Text> : item.details}
                                             </Text>

@@ -137,13 +137,12 @@ export default function EditNote() {
 
 
             {/* Read write and delete ops */}
-            <View style={{ backgroundColor: "cyan", paddingVertical: 10, paddingHorizontal: 10 }}>
+            <View style={{ backgroundColor: "cyan", padding: 10 }}>
                 <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
 
                     <TouchableOpacity onPress={handleBackToHome}>
                         <Ionicons name="arrow-back-outline" size={28} color="black" />
                     </TouchableOpacity>
-
                     <View style={{ flexDirection: "row", columnGap: 20, alignItems: "center" }}>
                         <TouchableOpacity
                             onPress={() => {

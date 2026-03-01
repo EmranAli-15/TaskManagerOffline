@@ -22,8 +22,6 @@ export const seedColorTable = async () => {
     `SELECT COUNT(*) as count FROM color;`
   );
 
-  console.log("from db => ",result)
-
   if (result?.count === 0) {
     await db.runAsync(`
       INSERT INTO color (head, body) VALUES
