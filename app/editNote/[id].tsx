@@ -78,6 +78,11 @@ export default function EditNote() {
     const handleDeleteNote = async () => {
         await deleteNote(id);
         router.navigate("/");
+    };
+
+    const handleBackToHome = async () => {
+        await handleSaveNote();
+        router.push("/");
     }
 
 
@@ -120,11 +125,48 @@ export default function EditNote() {
 
     return (
         <Container>
-            <View style={{ flex: 1, height: "100%" }}>
+
+            {/* Saved indecator */}
+            <>
+                {
+                    savedIndecator && <View style={styles.savedIndecator}>
+                        <Text style={{ color: "black", textAlign: "center", fontWeight: 900 }}>Saved !</Text>
+                    </View>
+                }
+            </>
+
+
+            {/* Read write and delete ops */}
+            <View style={{ backgroundColor: "cyan", paddingVertical: 10, paddingHorizontal: 10 }}>
+                <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
+
+                    <TouchableOpacity onPress={handleBackToHome}>
+                        <Ionicons name="arrow-back-outline" size={28} color="black" />
+                    </TouchableOpacity>
+
+                    <View style={{ flexDirection: "row", columnGap: 20, alignItems: "center" }}>
+                        <TouchableOpacity
+                            onPress={() => {
+                                setReadMode(!readMode);
+                                setOpenModal(false);
+                            }}>
+                            {
+                                readMode ?
+                                    <Entypo name="eye" size={28} color="black" /> :
+                                    <Entypo name="edit" size={28} color="black" />
+                            }
+                        </TouchableOpacity>
+                        <View style={{ flexDirection: "row", justifyContent: "flex-end" }}>
+                            <TouchableOpacity onPress={() => setOpenModal(!openModal)}>
+                                <SimpleLineIcons name="options-vertical" size={25} color="black" />
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                </View>
+            </View>
+            <View style={{ flex: 1, height: "100%", marginHorizontal: 10, position: "relative" }}>
                 <ScrollView>
                     <View>
-
-
 
 
                         <>
@@ -145,26 +187,10 @@ export default function EditNote() {
 
 
 
-                        <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "flex-end", columnGap: 20 }}>
-                            <TouchableOpacity
-                                onPress={() => {
-                                    setReadMode(!readMode);
-                                    setOpenModal(false);
-                                }}>
-                                {
-                                    readMode ?
-                                        <Entypo name="eye" size={28} color="#0077b6" /> :
-                                        <Entypo name="edit" size={28} color="#0077b6" />
-                                }
-                            </TouchableOpacity>
-                            <View style={{ flexDirection: "row", justifyContent: "flex-end" }}>
-                                <TouchableOpacity onPress={() => setOpenModal(!openModal)}>
-                                    <SimpleLineIcons name="options-vertical" size={25} color={color} />
-                                </TouchableOpacity>
-                            </View>
-                        </View>
 
 
+
+                        {/* Title */}
                         <TextInput
                             multiline={true}
                             style={[styles.title, { color: noteColorPallate[noteColor]?.head }]}
@@ -178,12 +204,12 @@ export default function EditNote() {
                             }}
                         />
 
-
+                        {/* Details */}
                         <View style={{ marginTop: 20, marginBottom: 100 }}>
                             <TextInput
                                 textAlignVertical='top'
                                 multiline={true}
-                                style={[styles.details, { color: color }]}
+                                style={[styles.details]}
                                 onChangeText={(text) => setDetails(text)}
                                 placeholderTextColor="gray"
                                 placeholder='Details ...'
@@ -197,13 +223,7 @@ export default function EditNote() {
                     </View>
                 </ScrollView>
 
-                <>
-                    {
-                        savedIndecator && <View style={[styles.savedIndecator, { backgroundColor: colorBg }]}>
-                            <Text style={{ color: "#F97A00", textAlign: "center", fontWeight: 700 }}>Saved !</Text>
-                        </View>
-                    }
-                </>
+
 
 
                 {/* Save button */}
@@ -216,11 +236,11 @@ export default function EditNote() {
                 </View>
 
                 <View style={{ position: "absolute", bottom: 10 }}>
-                    <View style={{ zIndex: 100, backgroundColor: colorBg, borderRadius: 20, flex: 1 }}>
+                    <View style={{ zIndex: 100, backgroundColor: "#0077b6", borderRadius: 20, flex: 1 }}>
                         <TouchableOpacity onPress={() => setShowOps(!showOps)}>
                             <View style={{ marginVertical: 10, alignSelf: "center" }}>
-                                {!showOps && <MaterialIcons name="keyboard-double-arrow-up" size={40} color={color} />}
-                                {showOps && <MaterialIcons name="keyboard-double-arrow-down" size={40} color={color} />}
+                                {!showOps && <MaterialIcons name="keyboard-double-arrow-up" size={40} color="#fff" />}
+                                {showOps && <MaterialIcons name="keyboard-double-arrow-down" size={40} color="#fff" />}
                             </View>
                         </TouchableOpacity>
 
@@ -230,6 +250,23 @@ export default function EditNote() {
                                 showOps &&
                                 <View style={{ marginTop: 10, marginBottom: 20 }}>
                                     <FlatList
+                                        style={{ marginHorizontal: 10 }}
+                                        horizontal
+                                        data={categories}
+                                        keyExtractor={(item: any, index) => index.toString()}
+                                        renderItem={({ item }) => (
+                                            <TouchableOpacity onPress={() => setCategoryId(item.id)}>
+                                                <View style={{ flex: 1, paddingHorizontal: 5, width: "100%" }}>
+                                                    <View style={{ backgroundColor: item?.id == categoryId ? "cyan" : "white", paddingHorizontal: 10, borderRadius: 16 }}>
+                                                        <ThemedText style={{ fontSize: 16, textAlign: "center", color: "black" }}>{item?.name}</ThemedText>
+                                                    </View>
+                                                </View>
+                                            </TouchableOpacity>
+                                        )}
+                                        contentContainerStyle={{ marginBottom: 10 }}
+                                    ></FlatList>
+                                    <FlatList
+                                        style={{ marginTop: 20, marginHorizontal: 10 }}
                                         horizontal
                                         data={noteColorPallate}
                                         keyExtractor={(item: any, index) => index.toString()}
@@ -237,22 +274,6 @@ export default function EditNote() {
                                             <TouchableOpacity onPress={() => setNoteColor(item.id - 1)}>
                                                 <View style={[styles.colorStyle, { backgroundColor: item.head, marginHorizontal: 10, flex: 1, alignItems: "center", justifyContent: "center", padding: 4 }]}>
                                                     <View style={[{ height: 38, width: 38, borderRadius: "50%", backgroundColor: item.id == noteColor + 1 ? item.head : item.body }]}></View>
-                                                </View>
-                                            </TouchableOpacity>
-                                        )}
-                                        contentContainerStyle={{ marginBottom: 10 }}
-                                    ></FlatList>
-                                    <FlatList
-                                        style={{ marginTop: 10 }}
-                                        horizontal
-                                        data={categories}
-                                        keyExtractor={(item: any, index) => index.toString()}
-                                        renderItem={({ item }) => (
-                                            <TouchableOpacity onPress={() => setCategoryId(item.id)}>
-                                                <View style={{ flex: 1, marginHorizontal: 10, width: "100%" }}>
-                                                    <View style={{ backgroundColor: item?.id == categoryId ? "#0077b6" : colorBg, padding: 2, borderRadius: 16 }}>
-                                                        <ThemedText style={{ fontSize: 16, textAlign: "center", color: item?.id == categoryId ? "#fff" : color }}>{item?.name}</ThemedText>
-                                                    </View>
                                                 </View>
                                             </TouchableOpacity>
                                         )}
@@ -296,8 +317,8 @@ const styles = StyleSheet.create({
     },
     savedIndecator: {
         position: "absolute",
-        zIndex: 10,
-        top: 50,
+        zIndex: 100,
+        top: 20,
         left: "35%",
         right: "35%",
         paddingHorizontal: 10,

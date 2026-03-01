@@ -27,7 +27,6 @@ export const seedColorTable = async () => {
   if (result?.count === 0) {
     await db.runAsync(`
       INSERT INTO color (head, body) VALUES
-      ('#77BEF0', '#FFCB61'),
       ('#FE5D26', '#F2C078'),
       ('#16C47F', '#FFD65A'),
       ('#5DD3B6', '#6E5034'),

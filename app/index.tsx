@@ -160,7 +160,7 @@ export default function HomeScreen() {
     }
     else return (
         <Container>
-            <ThemedText style={{ fontSize: 30, fontWeight: 700, backgroundColor: "cyan", color: "#000000", padding: 10 }}>
+            <ThemedText style={{ fontSize: 30, fontWeight: 700, backgroundColor: "cyan", color: "#000000", padding: 12 }}>
                 HelixNotes
             </ThemedText>
 
@@ -234,7 +234,7 @@ export default function HomeScreen() {
                 {/* Selected notes delete modal */}
                 <View>
                     <MyModal modal={deleteMultipleNoteModal} setModal={setDeleteMultipleNoteModal}>
-                        <View style={{ flexDirection: "column", rowGap: 8 }}>
+                        <View style={{ flexDirection: "column", rowGap: 20 }}>
                             <View style={{ alignItems: "center" }}>
                                 <View style={{
                                     padding: 5,
@@ -254,7 +254,7 @@ export default function HomeScreen() {
                             <TouchableOpacity
                                 onPress={handleDeleteMultipleNote}
                             >
-                                <View style={{ width: "100%", backgroundColor: "#0077b6", padding: 4 }}>
+                                <View style={styles.button}>
                                     <Text style={{ textAlign: "center", color: "white" }}>Delete</Text>
                                 </View>
                             </TouchableOpacity>
