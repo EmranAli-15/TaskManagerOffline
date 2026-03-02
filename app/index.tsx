@@ -1,7 +1,6 @@
 import Container from '@/components/Container';
 import MyModal from '@/components/MyModal';
 import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
 import { useSeed } from '@/contextProvider/ContextProvider';
 import { addNewCategory, deleteCategory, deleteMultipleNote, getCategories, getNotesByCategory } from '@/db/db';
 import AntDesign from '@expo/vector-icons/AntDesign';
@@ -196,7 +195,7 @@ export default function HomeScreen() {
                             <TouchableOpacity
                                 onPress={() => setDeleteCategoryModal(false)}
                             >
-                                <View style={{ borderColor: "#0077b6", backgroundColor: "white", padding: 5, borderRadius:5, borderWidth: 1 }}>
+                                <View style={{ borderColor: "#0077b6", backgroundColor: "white", padding: 5, borderRadius: 5, borderWidth: 1 }}>
                                     <Text style={{ textAlign: "center", color: "black" }}>Cancle</Text>
                                 </View>
                             </TouchableOpacity>
@@ -284,6 +283,7 @@ export default function HomeScreen() {
                     >
                         {
                             categories.map((nav: any, idx) => <TouchableOpacity
+                                style={{ flexDirection: "row", alignItems: "center" }}
                                 key={idx}
                                 onPress={() => {
                                     handleCancleSelection()
@@ -296,20 +296,20 @@ export default function HomeScreen() {
                                         setDeleteCategoryModal(true);
                                 }}
                             >
-                                <ThemedView style={[styles.navList, currentCategory === nav.name && { backgroundColor: "cyan" }]}>
-                                    <ThemedText style={[styles.navListText, currentCategory === nav.name && { color: "#000" }]}>{nav.name}</ThemedText>
-                                </ThemedView>
+                                <View style={[styles.navList, currentCategory === nav.name ? { backgroundColor: "cyan" } : { backgroundColor: "#000" }]}>
+                                    <Text style={[styles.navListText, currentCategory === nav.name ? { color: "#000" } : { color: "#fff" }]}>{nav.name}</Text>
+                                </View>
                             </TouchableOpacity>)
                         }
 
                         <TouchableOpacity
                             onPress={() => setAddCategoryModal(true)}
                         >
-                            <ThemedView style={styles.navList}>
-                                <ThemedText style={styles.navListText}>
+                            <View style={styles.navList}>
+                                <Text style={styles.navListText}>
                                     <AntDesign name="plus" size={24} color="#0077b6" />
-                                </ThemedText>
-                            </ThemedView>
+                                </Text>
+                            </View>
                         </TouchableOpacity>
                     </ScrollView>
                 </View>

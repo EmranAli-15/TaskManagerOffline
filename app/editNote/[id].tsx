@@ -208,7 +208,7 @@ export default function EditNote() {
                             <TextInput
                                 textAlignVertical='top'
                                 multiline={true}
-                                style={[styles.details]}
+                                style={styles.details}
                                 onChangeText={(text) => setDetails(text)}
                                 placeholderTextColor="gray"
                                 placeholder='Details ...'
@@ -301,6 +301,7 @@ const styles = StyleSheet.create({
         borderBottomLeftRadius: 8,
         borderBottomRightRadius: 8,
         minHeight: 200,
+        color: "#000"
     },
     navList: {
         paddingHorizontal: 8,

@@ -108,7 +108,7 @@ export default function AddNote() {
         <TouchableOpacity onPress={handleBackToHome}>
           <Ionicons name="arrow-back-outline" size={28} color="black" />
         </TouchableOpacity>
-        <ThemedText style={{ fontSize: 30, fontWeight: 700, color: "#000000" }}>
+        <ThemedText style={{ fontSize: 30, fontWeight: 700, color: "#000000", marginRight: 20 }}>
           HelixNotes
         </ThemedText>
         <View></View>
@@ -134,7 +134,7 @@ export default function AddNote() {
               <TextInput
                 textAlignVertical='top'
                 multiline={true}
-                style={[styles.details, { color: color }]}
+                style={styles.details}
                 onChangeText={(text) => setDetails(text)}
                 placeholderTextColor="gray"
                 placeholder='Details ...'
@@ -225,6 +225,7 @@ const styles = StyleSheet.create({
     borderBottomLeftRadius: 8,
     borderBottomRightRadius: 8,
     minHeight: 200,
+    color: "#000"
   },
   navList: {
     paddingHorizontal: 8,
