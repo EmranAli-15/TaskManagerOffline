@@ -279,7 +279,7 @@ export default function HomeScreen() {
                         horizontal
                         showsHorizontalScrollIndicator={false}
                         contentContainerStyle={{ gap: 8 }}
-                        style={{ marginTop: 20 }}
+                        style={{ marginTop: 10, marginBottom:-20 }}
                     >
                         {
                             categories.map((nav: any, idx) => <TouchableOpacity
@@ -394,11 +394,11 @@ export default function HomeScreen() {
                                 <View style={[styles.box, { transform: [{ rotate: `${(index + 1) % 2 ? '-2deg' : '4deg'}` }] }]}>
                                     <View style={{ height: 40, backgroundColor: item.head }}>
                                         <View style={{ height: "100%", flex: 1, justifyContent: "center", backgroundColor: item.isChecked ? "#000000b7" : "" }}>
-                                            <Text style={{ paddingHorizontal: 10, fontSize: 13, fontWeight: "700", overflow: "hidden", color: "white" }}>{item.title.length > 30 ? <Text>{item.title.slice(0, 30)}...</Text> : item.title}</Text>
+                                            <Text style={{ paddingHorizontal: 10, fontSize: 13, fontWeight: "700", overflow: "hidden", color: "black" }}>{item.title.length > 30 ? <Text>{item.title.slice(0, 30)}...</Text> : item.title}</Text>
                                         </View>
                                     </View>
                                     <View style={{ height: 90, backgroundColor: item.body }}>
-                                        <View style={{ height: "100%", backgroundColor: item.isChecked ? "#ee0e0edc" : "" }}>
+                                        <View style={{ height: "100%", backgroundColor: item.isChecked ? "#000000dc" : "" }}>
                                             <Text style={styles.item}>
                                                 {item.details.length > 110 ? <Text>{item.details.slice(0, 110)}...</Text> : item.details}
                                             </Text>
