@@ -12,6 +12,7 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useRef, useState } from 'react';
 import {
     FlatList,
+    Image,
     Keyboard,
     ScrollView,
     StyleSheet,
@@ -141,8 +142,12 @@ export default function EditNote() {
                 <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
 
                     <TouchableOpacity onPress={handleBackToHome}>
-                        <Ionicons name="arrow-back-outline" size={28} color="black" />
+                        <Ionicons name="arrow-back-outline" size={28} color="#001f3f" />
                     </TouchableOpacity>
+                    <Image
+                        source={require('../../assets/images/design.png')}
+                        style={{ width: 120, height: 20 }}
+                    />
                     <View style={{ flexDirection: "row", columnGap: 20, alignItems: "center" }}>
                         <TouchableOpacity
                             onPress={() => {
@@ -151,13 +156,13 @@ export default function EditNote() {
                             }}>
                             {
                                 readMode ?
-                                    <Entypo name="eye" size={28} color="black" /> :
-                                    <Entypo name="edit" size={28} color="black" />
+                                    <Entypo name="eye" size={28} color="#001f3f" /> :
+                                    <Entypo name="edit" size={28} color="#001f3f" />
                             }
                         </TouchableOpacity>
                         <View style={{ flexDirection: "row", justifyContent: "flex-end" }}>
                             <TouchableOpacity onPress={() => setOpenModal(!openModal)}>
-                                <SimpleLineIcons name="options-vertical" size={25} color="black" />
+                                <SimpleLineIcons name="options-vertical" size={25} color="#001f3f" />
                             </TouchableOpacity>
                         </View>
                     </View>
@@ -228,14 +233,14 @@ export default function EditNote() {
                 {/* Save button */}
                 <View style={{ position: "absolute", bottom: 10, right: 0 }}>
                     <TouchableOpacity onPress={handleSaveNote}>
-                        <View style={{ backgroundColor: "#0077b6", borderRadius: 20, padding: 8 }}>
+                        <View style={{ backgroundColor: "#001f3f", borderRadius: 20, padding: 8 }}>
                             <Ionicons name="checkmark-done" size={40} color="white" />
                         </View>
                     </TouchableOpacity>
                 </View>
 
                 <View style={{ position: "absolute", bottom: 10 }}>
-                    <View style={{ zIndex: 100, backgroundColor: "#0077b6", borderRadius: 20, flex: 1 }}>
+                    <View style={{ zIndex: 100, backgroundColor: "#001f3f", borderRadius: 20, flex: 1 }}>
                         <TouchableOpacity onPress={() => setShowOps(!showOps)}>
                             <View style={{ marginVertical: 10, alignSelf: "center" }}>
                                 {!showOps && <MaterialIcons name="keyboard-double-arrow-up" size={40} color="#fff" />}
@@ -256,8 +261,8 @@ export default function EditNote() {
                                         renderItem={({ item }) => (
                                             <TouchableOpacity onPress={() => setCategoryId(item.id)}>
                                                 <View style={{ flex: 1, paddingHorizontal: 5, width: "100%" }}>
-                                                    <View style={{ backgroundColor: item?.id == categoryId ? "cyan" : "white", paddingHorizontal: 10, borderRadius: 16 }}>
-                                                        <ThemedText style={{ fontSize: 16, textAlign: "center", color: "black" }}>{item?.name}</ThemedText>
+                                                    <View style={{ backgroundColor: item?.id == categoryId ? "cyan" : "white", paddingHorizontal: 10, borderRadius: 16, borderWidth: 1, borderColor: "cyan" }}>
+                                                        <ThemedText style={{ fontSize: 16, textAlign: "center", color: "#001f3f" }}>{item?.name}</ThemedText>
                                                     </View>
                                                 </View>
                                             </TouchableOpacity>

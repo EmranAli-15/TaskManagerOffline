@@ -160,7 +160,7 @@ export default function HomeScreen() {
     }
     else return (
         <Container>
-            <ThemedText style={{ fontSize: 30, fontWeight: 700, backgroundColor: "cyan", color: "#000000", padding: 12 }}>
+            <ThemedText style={{ fontSize: 30, fontWeight: 700, backgroundColor: "cyan", color: "#001f3f", padding: 12 }}>
                 HelixNotes
             </ThemedText>
 
@@ -297,8 +297,8 @@ export default function HomeScreen() {
                                         setDeleteCategoryModal(true);
                                 }}
                             >
-                                <View style={[styles.navList, currentCategory == nav.name ? { backgroundColor: "#00ffff50" } : { backgroundColor: "white" }]}>
-                                    <Text style={[styles.navListText, { color: "black" }]}>{nav.name}</Text>
+                                <View style={[styles.navList, currentCategory == nav.name ? { backgroundColor: "#001f3f" } : { backgroundColor: "white" }]}>
+                                    <Text style={[styles.navListText, currentCategory == nav.name ? { color: "white" } : { color: "#001f3f" }]}>{nav.name}</Text>
                                 </View>
                             </TouchableOpacity>)
                         }
@@ -308,7 +308,7 @@ export default function HomeScreen() {
                         >
                             <View style={styles.navList}>
                                 <Text style={styles.navListText}>
-                                    <AntDesign name="plus" size={17} color="#0077b6" />
+                                    <AntDesign name="plus" size={17} color="#001f3f" />
                                 </Text>
                             </View>
                         </TouchableOpacity>
@@ -331,6 +331,7 @@ export default function HomeScreen() {
                             selection && <View style={{ flexDirection: "row", columnGap: 10, alignItems: "center", marginTop: 20 }}>
                                 <Pressable onPress={() => handleDeleteMultipleNote()}>
                                     <View style={{ flexDirection: "row", columnGap: 4, alignItems: "center", backgroundColor: "#ff000030", borderWidth: 1, borderColor: "red", padding: 5, borderRadius: 10 }}>
+                                        <Text>Delete</Text>
                                         <MaterialIcons name="delete" size={17} color="red" />
                                     </View>
                                 </Pressable>
@@ -407,7 +408,7 @@ export default function HomeScreen() {
                                             <Ionicons name="checkmark-done-sharp" size={20} color="#7dff03" />
                                         </View>}
                                         <View style={{ height: "100%", flex: 1, justifyContent: "center", backgroundColor: item.isChecked ? "#000000b7" : "" }}>
-                                            <Text style={{ paddingHorizontal: 10, fontSize: 13, fontWeight: "400", overflow: "hidden", color: "black" }}>{item.title.length > 30 ? <Text>{item.title.slice(0, 30)}...</Text> : item.title}</Text>
+                                            <Text style={{ paddingHorizontal: 10, fontSize: 13, fontWeight: "400", overflow: "hidden", color: "#001f3f" }}>{item.title.length > 30 ? <Text>{item.title.slice(0, 30)}...</Text> : item.title}</Text>
                                         </View>
                                     </View>
                                     <View style={{ height: 90, backgroundColor: item.body }}>
@@ -455,7 +456,7 @@ const styles = StyleSheet.create({
         position: "absolute",
         bottom: 100,
         right: 10,
-        backgroundColor: "#0077b6",
+        backgroundColor: "#001f3f",
         padding: 20,
         borderRadius: "50%",
         zIndex: 10,
@@ -471,20 +472,20 @@ const styles = StyleSheet.create({
         paddingHorizontal: 8,
         borderRadius: 20,
         borderWidth: 1,
-        borderColor: "cyan"
+        borderColor: "#001f3f"
     },
     navListText: {
         fontSize: 14
     },
     inputStyle: {
         borderWidth: 1,
-        borderColor: "#0077b6",
+        borderColor: "#001f3f",
         borderRadius: 4,
         marginTop: 1
     },
     button: {
         width: "100%",
-        backgroundColor: "#0077b6",
+        backgroundColor: "#001f3f",
         padding: 5,
         borderRadius: 4
     }
