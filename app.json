@@ -7,7 +7,7 @@
     "slug": "TaskManagerOffline",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/notes.png",
+    "icon": "./assets/images/logo.png",
     "scheme": "taskmanageroffline",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
@@ -16,8 +16,8 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/icon.jpg",
-        "monochromeImage": "./assets/images/icon.jpg",
+        "foregroundImage": "./assets/images/logo.png",
+        "monochromeImage": "./assets/images/logo.png",
         "backgroundColor": "#000"
       },
       "edgeToEdgeEnabled": true,
@@ -26,15 +26,15 @@
     },
     "web": {
       "output": "static",
-      "favicon": "./assets/images/icon.jpg"
+      "favicon": "./assets/images/logo.png"
     },
     "plugins": [
       "expo-router",
       [
         "expo-splash-screen",
         {
-          "image": "./assets/images/icon.jpg",
-          "imageWidth": 200,
+          "image": "./assets/images/logo.png",
+          "imageWidth": 180,
           "resizeMode": "contain",
           "backgroundColor": "#000"
         }

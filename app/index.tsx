@@ -5,6 +5,7 @@ import { useSeed } from '@/contextProvider/ContextProvider';
 import { addNewCategory, deleteCategory, deleteMultipleNote, getCategories, getNotesByCategory } from '@/db/db';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import Foundation from '@expo/vector-icons/Foundation';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { useRouter } from 'expo-router';
 import React, { useCallback, useEffect, useState } from 'react';
@@ -279,7 +280,7 @@ export default function HomeScreen() {
                         horizontal
                         showsHorizontalScrollIndicator={false}
                         contentContainerStyle={{ gap: 8 }}
-                        style={{ marginTop: 10, marginBottom:-20 }}
+                        style={{ marginTop: 10, marginBottom: -20 }}
                     >
                         {
                             categories.map((nav: any, idx) => <TouchableOpacity
@@ -296,8 +297,8 @@ export default function HomeScreen() {
                                         setDeleteCategoryModal(true);
                                 }}
                             >
-                                <View style={[styles.navList, currentCategory === nav.name ? { backgroundColor: "cyan" } : { backgroundColor: "#000" }]}>
-                                    <Text style={[styles.navListText, currentCategory === nav.name ? { color: "#000" } : { color: "#fff" }]}>{nav.name}</Text>
+                                <View style={[styles.navList, currentCategory == nav.name ? { backgroundColor: "#00ffff50" } : { backgroundColor: "white" }]}>
+                                    <Text style={[styles.navListText, { color: "black" }]}>{nav.name}</Text>
                                 </View>
                             </TouchableOpacity>)
                         }
@@ -307,7 +308,7 @@ export default function HomeScreen() {
                         >
                             <View style={styles.navList}>
                                 <Text style={styles.navListText}>
-                                    <AntDesign name="plus" size={24} color="#0077b6" />
+                                    <AntDesign name="plus" size={17} color="#0077b6" />
                                 </Text>
                             </View>
                         </TouchableOpacity>
@@ -327,9 +328,18 @@ export default function HomeScreen() {
                 <View style={styles.viewButton}>
                     <View>
                         {
-                            selection && <View style={{ flexDirection: "row", columnGap: 10, alignItems: "center" }}>
-                                <Pressable onPress={() => handleDeleteMultipleNote()}><MaterialIcons name="delete" size={30} color="red" /></Pressable>
-                                <Pressable onPress={() => handleCancleSelection()}><Text style={{ fontSize: 16 }}>Cancle</Text></Pressable>
+                            selection && <View style={{ flexDirection: "row", columnGap: 10, alignItems: "center", marginTop: 20 }}>
+                                <Pressable onPress={() => handleDeleteMultipleNote()}>
+                                    <View style={{ flexDirection: "row", columnGap: 4, alignItems: "center", backgroundColor: "#ff000030", borderWidth: 1, borderColor: "red", padding: 5, borderRadius: 10 }}>
+                                        <MaterialIcons name="delete" size={17} color="red" />
+                                    </View>
+                                </Pressable>
+                                <Pressable onPress={() => handleCancleSelection()}>
+                                    <View style={{ flexDirection: "row", columnGap: 4, alignItems: "center", backgroundColor: "#09ff0030", borderWidth: 1, borderColor: "green", padding: 5, borderRadius: 10 }}>
+                                        <Text>Cancle</Text>
+                                        <AntDesign name="close" size={17} color="green" />
+                                    </View>
+                                </Pressable>
                             </View>
                         }
                     </View>
@@ -393,12 +403,15 @@ export default function HomeScreen() {
 
                                 <View style={[styles.box, { transform: [{ rotate: `${(index + 1) % 2 ? '-2deg' : '4deg'}` }] }]}>
                                     <View style={{ height: 40, backgroundColor: item.head }}>
+                                        {item.isChecked && <View style={{ position: "absolute", backgroundColor: "#7dff0330", borderRadius:"50%", padding:3, right: 5, top: 5, zIndex: 100 }}>
+                                            <Ionicons name="checkmark-done-sharp" size={20} color="#7dff03" />
+                                        </View>}
                                         <View style={{ height: "100%", flex: 1, justifyContent: "center", backgroundColor: item.isChecked ? "#000000b7" : "" }}>
-                                            <Text style={{ paddingHorizontal: 10, fontSize: 13, fontWeight: "700", overflow: "hidden", color: "black" }}>{item.title.length > 30 ? <Text>{item.title.slice(0, 30)}...</Text> : item.title}</Text>
+                                            <Text style={{ paddingHorizontal: 10, fontSize: 13, fontWeight: "400", overflow: "hidden", color: "black" }}>{item.title.length > 30 ? <Text>{item.title.slice(0, 30)}...</Text> : item.title}</Text>
                                         </View>
                                     </View>
                                     <View style={{ height: 90, backgroundColor: item.body }}>
-                                        <View style={{ height: "100%", backgroundColor: item.isChecked ? "#000000dc" : "" }}>
+                                        <View style={{ height: "100%", backgroundColor: item.isChecked ? "#00000096" : "" }}>
                                             <Text style={styles.item}>
                                                 {item.details.length > 110 ? <Text>{item.details.slice(0, 110)}...</Text> : item.details}
                                             </Text>
@@ -432,7 +445,11 @@ const styles = StyleSheet.create({
         overflow: "hidden",
         flex: 1,
         width: "100%",
-        backgroundColor: '#fff'
+        backgroundColor: '#fff',
+        shadowColor: "#000",
+        shadowOpacity: 0.08,
+        shadowRadius: 6,
+        elevation: 3
     },
     addNote: {
         position: "absolute",
@@ -453,6 +470,8 @@ const styles = StyleSheet.create({
         paddingVertical: 4,
         paddingHorizontal: 8,
         borderRadius: 20,
+        borderWidth: 1,
+        borderColor: "cyan"
     },
     navListText: {
         fontSize: 14
