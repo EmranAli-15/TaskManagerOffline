@@ -18,8 +18,8 @@ export default function RootLayout() {
         >
         </Stack>
       </Provider>
-      {/* <StatusBar barStyle={'dark-content'} backgroundColor="cyan"></StatusBar> */}
-      <StatusBar style={'dark'} backgroundColor='cyan'></StatusBar>
+      {/* <StatusBar barStyle={'dark-content'} backgroundColor="#00FFFF"></StatusBar> */}
+      <StatusBar style={'dark'} backgroundColor='#00FFFF' translucent={false}></StatusBar>
     </ThemeProvider>
   );
 }

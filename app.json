@@ -1,10 +1,15 @@
 {
   "expo": {
+    "androidStatusBar": {
+      "backgroundColor": "#00FFFF",
+      "barStyle": "dark-content",
+      "translucent": false
+    },
     "name": "HelixNotes",
     "assetBundlePatterns": [
       "./assets/database/*"
     ],
-    "slug": "TaskManagerOffline",
+    "slug": "HelixNotes",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/logo.png",
@@ -18,9 +23,9 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/logo.png",
         "monochromeImage": "./assets/images/logo.png",
-        "backgroundColor": "#000"
+        "backgroundColor": "#00FFFF"
       },
-      "edgeToEdgeEnabled": true,
+      "edgeToEdgeEnabled": false,
       "predictiveBackGestureEnabled": false,
       "package": "com.emranali15.TaskManagerOffline"
     },
@@ -33,10 +38,10 @@
       [
         "expo-splash-screen",
         {
-          "image": "./assets/images/logo.png",
-          "imageWidth": 180,
+          "image": "./assets/images/splash.png",
+          "imageWidth": 200,
           "resizeMode": "contain",
-          "backgroundColor": "#000"
+          "backgroundColor": "#00FFFF"
         }
       ],
       "expo-sqlite"
@@ -48,7 +53,7 @@
     "extra": {
       "router": {},
       "eas": {
-        "projectId": "23c58ef9-3a36-41f9-9c02-8c29480ae543"
+        "projectId": "8597ce7b-ffa1-4042-a60a-1de793c25856"
       }
     }
   }
